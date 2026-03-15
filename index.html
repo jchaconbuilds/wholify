@@ -175,6 +175,7 @@ body{font-family:var(--font-body);color:var(--t)}
 .task-opt:last-of-type{border-bottom:none}
 .task-opt:active{background:var(--bg)}
 .task-opt.sel{background:var(--brp)}
+.task-opt.in-master{background:#f7faf8;opacity:.75}
 .to-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .task-opt.sel .to-check{background:var(--br);border-color:var(--br)}
 .to-body{flex:1}
@@ -365,7 +366,7 @@ body{font-family:var(--font-body);color:var(--t)}
   </div>
   <div class="splash-btns">
     <button class="btn-hero" onclick="go('s-onboard');initOb()">Get started — it's free</button>
-    <button class="btn-ghost" onclick="demoMode()">Try the demo</button>
+    <button class="btn-ghost" onclick="window.location.href='preview.html'">Preview the app</button>
   </div>
 </div>
 
@@ -903,21 +904,30 @@ function selectEl(elId){
 function buildTaskPicker(elId){
   const el=ELEMENTS.find(e=>e.id===elId);
   const wrap=document.getElementById('task-picker-wrap');
-  wrap.innerHTML=`
+  // staged = tasks checked in the picker but not yet committed to selectedTasks
+  if(!S.staged) S.staged={};
+  if(!S.staged[elId]) S.staged[elId]={};
+
+  function renderPicker(){
+    const staged=S.staged[elId];
+    const stagedCount=Object.keys(staged).length;
+    wrap.innerHTML=`
     <div class="task-picker">
       <div class="tp-head">
         <div class="tp-head-icon" style="background:${el.bg}">${el.icon}</div>
-        <div><div class="tp-head-title">${el.name} wellness</div><div class="tp-head-sub">Tap to add tasks to your challenge</div></div>
+        <div><div class="tp-head-title">${el.name} wellness</div><div class="tp-head-sub">Select tasks, set duration, then add</div></div>
       </div>
       ${el.tasks.map((t,i)=>{
-        const sel=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===t.name)>=0;
-        return `<div class="task-opt${sel?' sel':''}" onclick="togTask('${elId}','${t.name}',${i})" id="topt-${elId}-${i}">
-          <div class="to-check">${sel?checkSvg():''}</div>
+        const inMaster=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===t.name)>=0;
+        const isStaged=!!staged[t.name];
+        const val=isStaged?staged[t.name].value:(t.def||'');
+        return `<div class="task-opt${isStaged?' sel':inMaster?' in-master':''}" id="topt-${elId}-${i}" onclick="stageTask('${elId}','${t.name}',${i})">
+          <div class="to-check">${isStaged?checkSvg():inMaster?`<svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="width:11px;height:11px"><polyline points="2,5.5 4.5,8 9,3" stroke="#52B788" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}</div>
           <div class="to-body">
-            <div class="to-name">${t.name}</div>
+            <div class="to-name">${t.name}${inMaster?` <span style="font-size:10px;color:var(--brl);font-weight:400">✓ added</span>`:''}</div>
             <div class="to-sub">${t.sub}</div>
-            ${t.unit?`<div class="to-input">
-              <input type="number" id="inp-${elId}-${i}" value="${sel?(S.selectedTasks.find(st=>st.elId===elId&&st.name===t.name)?.value||t.def):t.def}" oninput="updTaskVal('${elId}','${t.name}',this.value)"/>
+            ${t.unit&&isStaged?`<div class="to-input">
+              <input type="number" id="inp-${elId}-${i}" value="${val}" onclick="event.stopPropagation()" oninput="updStagedVal('${elId}','${t.name}',this.value)"/>
               <span class="to-unit">${t.unit}</span>
             </div>`:''}
           </div>
@@ -925,46 +935,76 @@ function buildTaskPicker(elId){
       }).join('')}
       <div class="tp-custom">
         <div class="tp-custom-row">
-          <input class="tp-custom-inp" id="ci-${elId}" placeholder="Custom task for ${el.name}..."/>
-          <button class="tp-custom-btn" onclick="addCustomTask('${elId}')">+ Add</button>
+          <input class="tp-custom-inp" id="ci-${elId}" placeholder="Custom task for ${el.name}..." onclick="event.stopPropagation()"/>
+          <button class="tp-custom-btn" onclick="stageCustomTask('${elId}')">+ Stage</button>
         </div>
       </div>
+      <div style="padding:10px 14px 12px">
+        <button id="add-staged-btn-${elId}"
+          onclick="addStagedTasks('${elId}')"
+          style="width:100%;padding:11px;border:none;border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
+          background:${stagedCount>0?'var(--br)':'var(--border)'};
+          color:${stagedCount>0?'white':'var(--t3)'};
+          pointer-events:${stagedCount>0?'auto':'none'}">
+          ${stagedCount>0?`+ Add ${stagedCount} task${stagedCount>1?'s':''} to challenge`:'Select tasks above to add'}
+        </button>
+      </div>
     </div>`;
+  }
+  renderPicker();
+
+  // Expose so sub-functions can trigger a re-render
+  S._renderPicker=()=>renderPicker();
+}
+
+function stageTask(elId,name,idx){
+  if(!S.staged) S.staged={};
+  if(!S.staged[elId]) S.staged[elId]={};
+  const el=ELEMENTS.find(e=>e.id===elId);
+  const t=el.tasks[idx];
+  // If already in master list, remove it (toggle off)
+  const masterIdx=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===name);
+  if(masterIdx>=0){
+    S.selectedTasks.splice(masterIdx,1);
+    buildElGrid(); updSelTasks(); updSetupBtn();
+    buildTaskPicker(elId); return;
+  }
+  // Toggle staged
+  if(S.staged[elId][name]){ delete S.staged[elId][name]; }
+  else { S.staged[elId][name]={value:t.def||'',unit:t.unit}; }
+  if(S._renderPicker) S._renderPicker();
+}
+
+function updStagedVal(elId,name,val){
+  if(S.staged&&S.staged[elId]&&S.staged[elId][name]) S.staged[elId][name].value=val;
+}
+
+function stageCustomTask(elId){
+  const inp=document.getElementById('ci-'+elId);
+  if(!inp||!inp.value.trim()) return;
+  const name=inp.value.trim();
+  if(!S.staged) S.staged={};
+  if(!S.staged[elId]) S.staged[elId]={};
+  S.staged[elId][name]={value:null,unit:null,custom:true};
+  inp.value='';
+  if(S._renderPicker) S._renderPicker();
+}
+
+function addStagedTasks(elId){
+  if(!S.staged||!S.staged[elId]) return;
+  const el=ELEMENTS.find(e=>e.id===elId);
+  Object.entries(S.staged[elId]).forEach(([name,data])=>{
+    const already=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===name)>=0;
+    if(!already){
+      S.selectedTasks.push({elId,name,icon:el.icon,elName:el.name,unit:data.unit,value:data.value,custom:!!data.custom});
+    }
+  });
+  S.staged[elId]={};
+  buildElGrid(); buildTaskPicker(elId); updSelTasks(); updSetupBtn();
 }
 
 function checkSvg(){
   return `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="width:11px;height:11px"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-}
-
-function togTask(elId,name,idx){
-  const el=ELEMENTS.find(e=>e.id===elId);
-  const t=el.tasks[idx];
-  const ei=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===name);
-  if(ei>=0){
-    S.selectedTasks.splice(ei,1);
-  } else {
-    const val=t.unit?(document.getElementById(`inp-${elId}-${idx}`)?.value||t.def):null;
-    S.selectedTasks.push({elId,name,icon:el.icon,elName:el.name,unit:t.unit,value:val});
-  }
-  buildElGrid();
-  buildTaskPicker(elId);
-  updSelTasks();
-  updSetupBtn();
-}
-
-function updTaskVal(elId,name,val){
-  const t=S.selectedTasks.find(st=>st.elId===elId&&st.name===name);
-  if(t) t.value=val;
-}
-
-function addCustomTask(elId){
-  const inp=document.getElementById('ci-'+elId);
-  if(!inp||!inp.value.trim()) return;
-  const el=ELEMENTS.find(e=>e.id===elId);
-  S.selectedTasks.push({elId,name:inp.value.trim(),icon:el.icon,elName:el.name,unit:null,value:null,custom:true});
-  el.tasks.push({name:inp.value.trim(),sub:'Custom task',unit:null});
-  inp.value='';
-  buildElGrid(); buildTaskPicker(elId); updSelTasks(); updSetupBtn();
 }
 
 function updSelTasks(){
