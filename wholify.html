@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Wholify — Build your whole self.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --br:#2D6A4F;--brl:#52B788;--brp:#D8F3DC;--brd:#1B4332;
+  --ac:#F4A261;--acl:#FFF3E8;--acd:#7A4010;
+  --bg:#F7F9F7;--card:#FFFFFF;--dark:#111C16;
+  --t:#1a1a1a;--t2:#6B7C74;--t3:#9aaba3;
+  --border:#E0EBE4;--border2:#C4D4C8;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --r:16px;--r-sm:10px;--r-lg:20px;
+}
+html,body{height:100%;overflow:hidden;background:var(--dark)}
+body{font-family:var(--font-body);color:var(--t)}
+
+/* ── APP SHELL ── */
+#app{
+  max-width:430px;margin:0 auto;
+  height:100dvh;height:100vh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  overflow:hidden;position:relative;
+}
+
+/* ── SCREENS ── */
+.screen{
+  display:none;flex:1;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+.screen.active{display:flex}
+
+/* ── SPLASH ── */
+#s-splash{background:var(--dark);justify-content:space-between;padding:0}
+.splash-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px 24px}
+.splash-cal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:32px;width:100%}
+.sc{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;animation:fadeUp 0.6s ease both}
+.sc.d{background:var(--br)}.sc.p{background:#1f3d2e;border:1px solid #2a5a3e}
+.sc.m{background:#161f1a;border:1px solid #1f2e22}.sc.f{background:#0f1810;border:0.5px solid #1a2a1e}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.splash-logo{font-family:var(--font-display);font-size:52px;font-weight:400;letter-spacing:-1.5px;color:#fff;margin-bottom:8px}
+.splash-logo em{color:var(--ac);font-style:normal}
+.splash-tag{font-size:15px;color:#7aab8e;text-align:center;line-height:1.6;margin-bottom:0}
+.splash-btns{padding:24px 28px 40px;display:flex;flex-direction:column;gap:10px}
+.btn-hero{width:100%;padding:16px;background:var(--ac);color:var(--dark);border:none;border-radius:var(--r);font-family:var(--font-body);font-size:16px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.btn-hero:active{opacity:.85}
+.btn-ghost{width:100%;padding:15px;background:rgba(255,255,255,.08);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-body);font-size:15px;cursor:pointer;transition:opacity .15s}
+.btn-ghost:active{opacity:.7}
+
+/* ── ONBOARDING ── */
+#s-onboard{background:var(--bg);padding:0}
+.ob-wrap{flex:1;display:flex;flex-direction:column}
+.ob-prog{height:3px;background:var(--border);flex-shrink:0;position:relative}
+.ob-prog-fill{height:100%;background:var(--br);border-radius:2px;transition:width .4s ease}
+.ob-content{flex:1;padding:28px 24px 16px;display:flex;flex-direction:column;overflow-y:auto}
+.ob-step{display:none;flex:1;flex-direction:column;animation:fadeIn .25s ease}
+.ob-step.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+.ob-icon-bg{width:52px;height:52px;border-radius:14px;background:var(--brp);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.ob-icon-bg svg{width:26px;height:26px}
+.ob-h{font-family:var(--font-display);font-size:26px;font-weight:500;color:var(--brd);margin-bottom:8px;line-height:1.2}
+.ob-sub{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:24px}
+.ob-spacer{flex:1;min-height:16px}
+.ob-footer{padding:16px 24px 32px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)}
+.ob-dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}
+.ob-dot{width:6px;height:6px;border-radius:3px;background:var(--border2);transition:all .3s}
+.ob-dot.active{background:var(--br);width:20px}
+.ob-nav{display:flex;gap:10px}
+.ob-back{flex:0 0 auto;padding:12px 18px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r-sm);font-family:var(--font-body);font-size:14px;color:var(--t2);cursor:pointer}
+.ob-next{flex:1;padding:13px;background:var(--br);color:#fff;border:none;border-radius:var(--r-sm);font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:all .15s}
+.ob-next:disabled{opacity:.3;pointer-events:none}
+.ob-next:active{background:var(--brd)}
+
+/* name input */
+.name-inp{width:100%;padding:15px 18px;border-radius:var(--r);border:2px solid var(--border);background:var(--card);font-family:var(--font-display);font-size:22px;color:var(--t);outline:none;transition:border-color .2s}
+.name-inp:focus{border-color:var(--br)}
+.name-inp::placeholder{color:var(--t3)}
+
+/* goal chips */
+.goal-chips{display:flex;flex-wrap:wrap;gap:8px}
+.goal-chip{padding:10px 16px;border-radius:24px;border:1.5px solid var(--border2);background:var(--card);font-size:13px;font-weight:400;color:var(--t2);cursor:pointer;transition:all .15s;user-select:none}
+.goal-chip:active{transform:scale(.96)}
+.goal-chip.sel{border-color:var(--br);background:var(--brp);color:var(--brd);font-weight:500}
+.sel-note{font-size:12px;color:var(--br);font-weight:500;margin-top:10px;min-height:18px}
+
+/* notif cards */
+.notif-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:10px}
+.nc-row{display:flex;align-items:center;gap:12px}
+.nc-icon{width:40px;height:40px;border-radius:11px;background:var(--brp);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nc-icon svg{width:20px;height:20px}
+.nc-text{flex:1}
+.nc-text p{font-size:14px;font-weight:500;color:var(--t)}
+.nc-text span{font-size:12px;color:var(--t2)}
+.tog{width:44px;height:24px;border-radius:12px;background:var(--br);cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tog.off{background:var(--border2)}
+.tog::after{content:'';position:absolute;width:18px;height:18px;border-radius:9px;background:#fff;top:3px;left:3px;transition:transform .2s}
+.tog:not(.off)::after{transform:translateX(20px)}
+.time-row{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.time-row label{font-size:12px;color:var(--t2);flex-shrink:0}
+.time-row select{flex:1;padding:8px 10px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);font-family:var(--font-body);font-size:13px;color:var(--t)}
+
+/* avatar preview */
+.av-preview{display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0 16px}
+.av-circle{width:88px;height:88px;border-radius:50%;background:var(--brp);border:3px solid var(--br);display:flex;align-items:center;justify-content:center}
+.av-initial{font-family:var(--font-display);font-size:36px;font-weight:500;color:var(--br);line-height:1}
+.av-hint{font-size:13px;color:var(--t2);text-align:center;line-height:1.6;max-width:240px}
+.color-row{display:flex;gap:10px;margin-top:12px;justify-content:center}
+.cswatch{width:32px;height:32px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .15s}
+.cswatch.sel{transform:scale(1.15)}
+
+/* welcome */
+.welcome-hero{background:var(--brd);border-radius:var(--r-lg);padding:22px;margin-bottom:16px;text-align:center}
+.wh-av{width:64px;height:64px;border-radius:50%;background:var(--br);border:3px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.wh-initial{font-family:var(--font-display);font-size:30px;color:#fff;line-height:1}
+.wh-name{font-family:var(--font-display);font-size:22px;color:#fff;margin-bottom:4px}
+.wh-sub{font-size:13px;color:#7aab8e}
+.feat-list{display:flex;flex-direction:column;gap:8px}
+.feat{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm)}
+.feat-icon{width:36px;height:36px;border-radius:10px;background:var(--brp);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.feat-icon svg{width:18px;height:18px}
+.feat-text strong{font-size:13px;font-weight:500;display:block;color:var(--t)}
+.feat-text span{font-size:12px;color:var(--t2)}
+
+/* ── SETUP ── */
+#s-setup{background:var(--bg);padding:0}
+.setup-header{padding:20px 24px 0;flex-shrink:0}
+.back-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.back-btn{background:transparent;border:none;cursor:pointer;color:var(--t2);font-size:22px;padding:0;line-height:1}
+.screen-title{font-family:var(--font-display);font-size:24px;font-weight:500;color:var(--brd)}
+.screen-sub{font-size:13px;color:var(--t2);margin-top:4px}
+.setup-body{flex:1;overflow-y:auto;padding:16px 24px 100px}
+.setup-footer{position:absolute;bottom:0;left:0;right:0;padding:14px 24px 28px;background:linear-gradient(to top,var(--bg) 75%,transparent);flex-shrink:0}
+
+/* duration picker */
+.dur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.dur-card{border:2px solid var(--border);border-radius:var(--r);padding:16px 8px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card)}
+.dur-card:active{transform:scale(.97)}
+.dur-card.sel{border-color:var(--br);background:var(--brp)}
+.dur-num{font-family:var(--font-display);font-size:32px;font-weight:500;color:var(--br)}
+.dur-lbl{font-size:11px;color:var(--t2);margin-top:3px}
+
+/* section label */
+.s-lbl{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+
+/* element grid */
+.el-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px}
+.el-btn{border:2px solid var(--border);border-radius:12px;padding:10px 6px 8px;text-align:center;cursor:pointer;transition:all .15s;background:var(--card);position:relative}
+.el-btn:active{transform:scale(.94)}
+.el-btn.active{border-color:var(--br);background:var(--brp)}
+.el-btn.has-tasks{border-color:var(--br);background:var(--br)}
+.el-btn.has-tasks .el-name{color:rgba(255,255,255,.85)}
+.el-btn .el-icon{font-size:18px;display:block;margin-bottom:4px}
+.el-btn .el-name{font-size:10px;font-weight:500;color:var(--t2);line-height:1.2}
+.el-btn.active .el-name{color:var(--brd)}
+.el-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:var(--ac);display:none;align-items:center;justify-content:center;font-size:9px;color:var(--dark);font-weight:700}
+.el-btn.has-tasks .el-badge{display:flex}
+.prog-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.prog-fill{height:100%;background:var(--br);border-radius:2px;transition:width .4s}
+
+/* task picker */
+.task-picker{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;animation:fadeIn .2s ease}
+.tp-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.tp-head-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.tp-head-title{font-size:14px;font-weight:500;color:var(--t)}
+.tp-head-sub{font-size:11px;color:var(--t2)}
+.task-opt{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.task-opt:last-of-type{border-bottom:none}
+.task-opt:active{background:var(--bg)}
+.task-opt.sel{background:var(--brp)}
+.to-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-opt.sel .to-check{background:var(--br);border-color:var(--br)}
+.to-body{flex:1}
+.to-name{font-size:13px;font-weight:500;color:var(--t)}
+.to-sub{font-size:11px;color:var(--t2);margin-top:1px}
+.to-input{display:none;align-items:center;gap:6px;margin-top:8px}
+.task-opt.sel .to-input{display:flex}
+.to-input input{width:70px;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border2);background:var(--bg);font-family:var(--font-body);font-size:13px;color:var(--t);text-align:center}
+.to-unit{font-size:12px;color:var(--t2)}
+.tp-custom{padding:12px 16px;border-top:1px solid var(--border)}
+.tp-custom-row{display:flex;gap:8px}
+.tp-custom-inp{flex:1;padding:8px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--bg);font-family:var(--font-body);font-size:13px;color:var(--t);outline:none}
+.tp-custom-inp:focus{border-color:var(--brl)}
+.tp-custom-btn{padding:8px 14px;background:var(--bg);border:1.5px solid var(--border2);border-radius:9px;font-family:var(--font-body);font-size:13px;color:var(--t2);cursor:pointer;white-space:nowrap}
+
+/* selected tasks summary */
+.sel-tasks{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.sel-tasks-head{padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--border);font-size:11px;font-weight:500;color:var(--t2);letter-spacing:.05em;text-transform:uppercase}
+.sel-task-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.sel-task-row:last-child{border-bottom:none}
+.sel-task-icon{font-size:14px;flex-shrink:0}
+.sel-task-name{font-size:13px;flex:1;color:var(--t)}
+.sel-task-tag{font-size:10px;padding:2px 7px;border-radius:9px;background:var(--brp);color:var(--brd)}
+.sel-task-rm{width:20px;height:20px;border-radius:50%;background:var(--bg);border:1px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:var(--t2);line-height:1}
+
+/* finish btn variants */
+.btn-main{width:100%;padding:15px;background:var(--br);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-main:disabled{opacity:.3;pointer-events:none}
+.btn-main:active{background:var(--brd)}
+.btn-outline{width:100%;padding:14px;background:transparent;color:var(--br);border:2px solid var(--br);border-radius:var(--r);font-family:var(--font-body);font-size:15px;font-weight:500;cursor:pointer;margin-top:8px}
+
+/* ── CALENDAR (main) ── */
+#s-cal{background:var(--bg);padding:0}
+.cal-app-header{padding:14px 20px 12px;display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
+.cal-logo{font-family:var(--font-display);font-size:22px;font-weight:400;color:var(--br);letter-spacing:-.3px}
+.cal-logo em{color:var(--ac);font-style:normal}
+.streak-pill{display:flex;align-items:center;gap:5px;background:var(--acl);color:var(--acd);font-size:12px;font-weight:500;padding:5px 11px;border-radius:20px}
+.av-sm{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;font-weight:500;color:#fff}
+.cal-scroll{flex:1;overflow-y:auto;padding:0 0 90px}
+.progress-band{margin:14px 16px 0;background:var(--br);border-radius:16px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.pb-left .pb-sub{font-size:11px;color:rgba(255,255,255,.6);margin-bottom:3px}
+.pb-left .pb-main{font-size:20px;font-weight:500;color:#fff}
+.pb-left .pb-main span{font-size:13px;font-weight:400;opacity:.6}
+.pb-track{height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:8px;width:120px;overflow:hidden}
+.pb-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .5s}
+.pb-right .pb-pct{font-size:24px;font-weight:500;color:var(--ac)}
+.pb-right .pb-lbl{font-size:10px;color:rgba(255,255,255,.5)}
+.cal-section{padding:16px 16px 0}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-month{font-size:15px;font-weight:500;color:var(--t)}
+.cal-navs{display:flex;gap:6px}
+.cal-nav-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);background:transparent;cursor:pointer;color:var(--t2);font-size:13px;display:flex;align-items:center;justify-content:center}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px}
+.dow{text-align:center;font-size:11px;font-weight:500;color:var(--t3);padding:2px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cd{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;user-select:none;transition:transform .1s,opacity .1s}
+.cd:active{transform:scale(.88)}
+.cd.empty,.cd.future{pointer-events:none}
+.cd.done{background:var(--br)}
+.cd.partial{background:var(--brp);border:1.5px solid var(--brl)}
+.cd.missed{background:#f5f5f2;border:1px solid var(--border)}
+.cd.today{background:var(--card);border:2.5px solid var(--br)}
+.cd.future{background:transparent;border:1px solid var(--border);opacity:.3}
+.cd.editable{box-shadow:0 0 0 2.5px var(--ac)}
+.cdn{font-size:10px;font-weight:500;color:var(--t3)}
+.cd.done .cdn{color:rgba(255,255,255,.45);position:absolute;top:2px;left:0;right:0;text-align:center;font-size:8px}
+.cd.today .cdn{color:var(--brd);font-weight:600;font-size:12px}
+.cd.partial .cdn{color:var(--brd);font-size:12px}
+.cd.missed .cdn{font-size:12px}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-top:5px}
+.cal-legend{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2)}
+.leg-sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.edit-banner{margin:10px 16px 0;background:var(--acl);border-radius:10px;padding:9px 13px;display:flex;align-items:center;gap:7px;font-size:12px;color:var(--acd)}
+.checkin{margin:12px 16px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden}
+.ci-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border)}
+.ci-title{font-size:14px;font-weight:500;color:var(--t)}
+.ci-grade{font-size:13px;color:var(--t2)}
+.ci-grade strong{color:var(--br);font-weight:600}
+.task-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.task-row:active{background:var(--bg)}
+.task-row:last-of-type{border-bottom:none}
+.task-row.ck{background:var(--brp)}
+.tr-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.task-row.ck .tr-check{background:var(--br);border-color:var(--br)}
+.tr-label{font-size:13px;flex:1;color:var(--t)}
+.task-row.ck .tr-label{color:var(--t2);text-decoration:line-through;text-decoration-color:var(--brl)}
+.tr-tag{font-size:10px;padding:2px 7px;border-radius:9px;background:var(--brp);color:var(--brd)}
+.task-row.ck .tr-tag{background:rgba(45,106,79,.12);color:var(--br)}
+.ci-footer{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-top:1px solid var(--border)}
+.ci-lock{font-size:11px;color:var(--t3)}
+.log-btn{padding:9px 20px;background:var(--br);color:#fff;border:none;border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.log-btn:active{background:var(--brd)}
+.log-btn.done-btn{background:var(--brl)}
+.notif-strip{margin:10px 16px 0;background:var(--acl);border-radius:10px;padding:9px 13px;display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--acd);line-height:1.5}
+.share-row{margin:12px 16px 0;display:flex;gap:8px}
+.share-btn{flex:1;background:var(--br);color:#fff;border:none;border-radius:var(--r-sm);padding:12px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.share-btn:active{background:var(--brd)}
+.share-copy{width:44px;border-radius:var(--r-sm);border:1.5px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t2)}
+
+/* share card modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-end;justify-content:center;padding:0}
+.modal-bg.open{display:flex;animation:fadeIn .2s ease}
+.modal-sheet{background:var(--bg);border-radius:24px 24px 0 0;padding:20px 20px 36px;width:100%;max-width:430px;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto 16px}
+.share-card{background:var(--brd);border-radius:18px;padding:18px;color:#fff;margin-bottom:14px}
+.sc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sc-logo{font-family:var(--font-display);font-size:18px}
+.sc-logo em{color:var(--ac);font-style:normal}
+.sc-meta{font-size:10px;opacity:.45}
+.sc-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:12px}
+.scc{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;position:relative}
+.scc.d{background:var(--brl)}.scc.p{background:rgba(255,255,255,.12)}.scc.m{background:rgba(255,255,255,.05)}.scc.f{background:rgba(255,255,255,.03)}.scc.t{border:1.5px solid var(--ac)}
+.scc-n{font-size:7px;color:rgba(255,255,255,.3)}
+.scc.d .scc-n{position:absolute;top:1px;left:0;right:0;text-align:center}
+.sc-stats{display:flex;gap:16px}
+.sc-stat .sv{font-family:var(--font-display);font-size:20px;color:var(--ac)}
+.sc-stat .sl{font-size:9px;opacity:.5;margin-top:1px}
+.sc-tag{font-size:9px;opacity:.3;margin-top:8px;text-align:right}
+.share-actions{display:flex;flex-direction:column;gap:8px}
+.share-action-btn{width:100%;padding:13px;border-radius:var(--r-sm);font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.share-action-btn.primary{background:var(--br);color:#fff}
+.share-action-btn.secondary{background:transparent;border:1.5px solid var(--border2);color:var(--t)}
+
+/* edit modal */
+.edit-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center;padding:20px}
+.edit-modal-bg.open{display:flex;animation:fadeIn .2s ease}
+.edit-modal{background:var(--card);border-radius:20px;padding:22px;width:100%;max-width:320px;animation:fadeUp .2s ease}
+.edit-modal h3{font-family:var(--font-display);font-size:18px;color:var(--brd);margin-bottom:6px}
+.edit-modal p{font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.5}
+.edit-btns{display:flex;gap:8px}
+.edit-btns button{flex:1;padding:11px;border-radius:10px;font-family:var(--font-body);font-size:14px;cursor:pointer;border:none}
+.edit-cancel{background:var(--bg);border:1.5px solid var(--border2)!important;color:var(--t2)}
+.edit-confirm{background:var(--br);color:#fff;font-weight:500}
+
+/* tabnav */
+.tabnav{display:flex;border-top:1px solid var(--border);background:var(--card);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0px)}
+.tab{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:transparent;color:var(--t3);font-size:10px;font-family:var(--font-body);transition:color .15s}
+.tab svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+.tab.active{color:var(--br)}
+
+/* ── RESULTS ── */
+#s-results{background:var(--bg);padding:0}
+.results-scroll{flex:1;overflow-y:auto;padding:16px 16px 100px}
+.grade-hero{background:var(--brd);border-radius:var(--r-lg);padding:20px;margin-bottom:14px}
+.gh-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.gh-label{font-size:12px;color:rgba(255,255,255,.55)}
+.gh-badge{font-size:11px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:3px 9px;border-radius:10px}
+.grade-display{display:flex;align-items:center;gap:14px}
+.grade-letter{font-family:var(--font-display);font-size:56px;color:var(--ac);line-height:1}
+.grade-info p{font-size:13px;color:rgba(255,255,255,.8);margin-bottom:5px}
+.grade-bar{height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.grade-bar-fill{height:100%;background:var(--ac);border-radius:2px}
+.grade-note{font-size:10px;color:rgba(255,255,255,.4);margin-top:5px}
+.hm-section{margin-bottom:14px}
+.hm-title{font-size:13px;font-weight:500;color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+.hm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.hm-cell{border-radius:10px;padding:10px 6px;text-align:center}
+.hm-icon{font-size:16px;display:block;margin-bottom:4px}
+.hm-name{font-size:9px;margin-bottom:3px}
+.hm-val{font-size:12px;font-weight:600}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.stat-v{font-family:var(--font-display);font-size:24px;color:var(--brd);margin-bottom:2px}
+.stat-l{font-size:12px;color:var(--t2)}
+.stat-f{font-size:11px;color:var(--br);margin-top:5px;font-style:italic}
+.new-challenge-btn{width:100%;padding:14px;background:transparent;border:2px solid var(--br);border-radius:var(--r);color:var(--br);font-family:var(--font-body);font-size:14px;font-weight:500;cursor:pointer}
+
+/* toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══ SPLASH ═══ -->
+<div class="screen active" id="s-splash">
+  <div class="splash-top">
+    <div class="splash-cal" id="splash-cal"></div>
+    <div class="splash-logo">Whol<em>i</em>fy</div>
+    <div class="splash-tag">Change how you look at change.</div>
+  </div>
+  <div class="splash-btns">
+    <button class="btn-hero" onclick="go('s-onboard');initOb()">Get started — it's free</button>
+    <button class="btn-ghost" onclick="demoMode()">Try the demo</button>
+  </div>
+</div>
+
+<!-- ═══ ONBOARDING ═══ -->
+<div class="screen" id="s-onboard">
+  <div class="ob-wrap">
+    <div class="ob-prog"><div class="ob-prog-fill" id="ob-fill" style="width:20%"></div></div>
+    <div class="ob-content">
+
+      <div class="ob-step active" id="ob1">
+        <div class="ob-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div class="ob-h">What should we call you?</div>
+        <div class="ob-sub">This is how your progress will be celebrated — and how the W marks on your calendar will feel like yours.</div>
+        <input class="name-inp" id="ob-name" type="text" placeholder="Your first name" autocomplete="given-name" oninput="onNameInput()"/>
+        <div class="ob-spacer"></div>
+      </div>
+
+      <div class="ob-step" id="ob2">
+        <div class="ob-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/></svg></div>
+        <div class="ob-h">What are your goals?</div>
+        <div class="ob-sub">Select everything that resonates. Real change rarely has just one reason behind it.</div>
+        <div class="goal-chips">
+          <div class="goal-chip" onclick="togGoal(this)">Build better habits</div>
+          <div class="goal-chip" onclick="togGoal(this)">Physical health</div>
+          <div class="goal-chip" onclick="togGoal(this)">Mental wellbeing</div>
+          <div class="goal-chip" onclick="togGoal(this)">More energy &amp; focus</div>
+          <div class="goal-chip" onclick="togGoal(this)">Reduce stress</div>
+          <div class="goal-chip" onclick="togGoal(this)">Personal growth</div>
+          <div class="goal-chip" onclick="togGoal(this)">Accountability</div>
+          <div class="goal-chip" onclick="togGoal(this)">Just exploring</div>
+        </div>
+        <div class="sel-note" id="goal-note"></div>
+        <div class="ob-spacer"></div>
+      </div>
+
+      <div class="ob-step" id="ob3">
+        <div class="ob-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+        <div class="ob-h">Stay on track</div>
+        <div class="ob-sub">Reminders are the difference between a good intention and a real streak. Set them now — change anytime.</div>
+        <div class="notif-card">
+          <div class="nc-row">
+            <div class="nc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="nc-text"><p>Morning check-in</p><span>Start your day with intention</span></div>
+            <div class="tog" id="tog-m" onclick="togNotif(this,'tr-m')"></div>
+          </div>
+          <div class="time-row" id="tr-m"><label>Time</label><select><option>6:00 AM</option><option>6:30 AM</option><option selected>7:00 AM</option><option>7:30 AM</option><option>8:00 AM</option></select></div>
+        </div>
+        <div class="notif-card">
+          <div class="nc-row">
+            <div class="nc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></div>
+            <div class="nc-text"><p>Evening log reminder</p><span>Don't lose your streak</span></div>
+            <div class="tog" id="tog-e" onclick="togNotif(this,'tr-e')"></div>
+          </div>
+          <div class="time-row" id="tr-e"><label>Time</label><select><option>8:00 PM</option><option>8:30 PM</option><option selected>9:00 PM</option><option>9:30 PM</option><option>10:00 PM</option></select></div>
+        </div>
+        <div class="notif-card">
+          <div class="nc-row">
+            <div class="nc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+            <div class="nc-text"><p>Streak milestones</p><span>Celebrate your wins</span></div>
+            <div class="tog" onclick="this.classList.toggle('off')"></div>
+          </div>
+        </div>
+        <div class="ob-spacer"></div>
+      </div>
+
+      <div class="ob-step" id="ob4">
+        <div class="ob-icon-bg"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="ob-h">Your profile</div>
+        <div class="ob-sub">Your initial becomes your avatar — clean, yours, and gender-neutral. Pick an accent color.</div>
+        <div class="av-preview">
+          <div class="av-circle" id="av-circle"><div class="av-initial" id="av-initial">W</div></div>
+          <div class="av-hint">Your initial from your name. Shows on your share card and streak badge.</div>
+          <div class="color-row" id="color-row"></div>
+        </div>
+        <div class="ob-spacer"></div>
+      </div>
+
+      <div class="ob-step" id="ob5">
+        <div class="welcome-hero" id="welcome-hero">
+          <div class="wh-av" id="wh-av"><div class="wh-initial" id="wh-initial">W</div></div>
+          <div class="wh-name" id="wh-name">Hey, friend.</div>
+          <div class="wh-sub">Discipline looks like showing up. Let's build.</div>
+        </div>
+        <div class="feat-list">
+          <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="feat-text"><strong>W-mark calendar</strong><span>Complete a day. Earn your W. Build the grid.</span></div></div>
+          <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="feat-text"><strong>Grade-based scoring</strong><span>4 of 5 tasks earns a B+. Effort counts here.</span></div></div>
+          <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><div class="feat-text"><strong>Share your progress</strong><span>One tap. Screenshot-ready. Post your W grid.</span></div></div>
+        </div>
+        <div class="ob-spacer"></div>
+      </div>
+    </div>
+
+    <div class="ob-footer">
+      <div class="ob-dots" id="ob-dots"></div>
+      <div class="ob-nav">
+        <button class="ob-back" id="ob-back" onclick="obBack()" style="display:none">Back</button>
+        <button class="ob-next" id="ob-next" onclick="obNext()" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SETUP ═══ -->
+<div class="screen" id="s-setup">
+  <div class="setup-header">
+    <div class="back-row">
+      <button class="back-btn" onclick="go('s-splash')">←</button>
+      <div>
+        <div class="screen-title">Build your challenge</div>
+        <div class="screen-sub" id="setup-sub">Choose your duration and focus areas</div>
+      </div>
+    </div>
+  </div>
+  <div class="setup-body" id="setup-body">
+    <div class="s-lbl">Challenge duration</div>
+    <div class="dur-grid">
+      <div class="dur-card sel" onclick="selDur(this,30)"><div class="dur-num">30</div><div class="dur-lbl">days</div></div>
+      <div class="dur-card" onclick="selDur(this,60)"><div class="dur-num">60</div><div class="dur-lbl">days</div></div>
+      <div class="dur-card" onclick="selDur(this,90)"><div class="dur-num">90</div><div class="dur-lbl">days</div></div>
+    </div>
+
+    <div class="s-lbl">Your wellness focus <span id="el-count-lbl" style="color:var(--br);font-weight:500;text-transform:none;letter-spacing:0">(0/6 — pick 3 to 6)</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="el-prog" style="width:0%"></div></div>
+    <div class="el-grid" id="el-grid"></div>
+
+    <div id="task-picker-wrap"></div>
+    <div id="sel-tasks-wrap" style="display:none">
+      <div class="s-lbl">Your tasks (<span id="task-count">0</span>)</div>
+      <div class="sel-tasks" id="sel-tasks">
+        <div class="sel-tasks-head">Daily challenge tasks</div>
+      </div>
+    </div>
+  </div>
+  <div class="setup-footer">
+    <button class="btn-main" id="setup-btn" disabled onclick="startChallenge()">Select at least 3 dimensions</button>
+  </div>
+</div>
+
+<!-- ═══ CALENDAR ═══ -->
+<div class="screen" id="s-cal">
+  <div class="cal-app-header">
+    <div class="cal-logo">Whol<em>i</em>fy</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="streak-pill" id="streak-pill" style="display:none">
+        <svg width="10" height="13" viewBox="0 0 10 13" style="width:10px;height:13px" fill="#F4A261"><path d="M6 0S6.5 3.5 4.2 5C4.2 5 4.7 2.8 2.8 2.8 2.8 2.8 0 5 0 7.7 0 10.5 2.3 13 5 13c2.7 0 5-2.5 5-5.3C10 4.5 7.3 2.8 6 0z"/></svg>
+        <span id="streak-num">0</span>d streak
+      </div>
+      <div class="av-sm" id="cal-av" style="background:#2D6A4F">W</div>
+    </div>
+  </div>
+  <div class="cal-scroll">
+    <div class="progress-band">
+      <div class="pb-left">
+        <div class="pb-sub" id="pb-challenge">30-Day Challenge</div>
+        <div class="pb-main">Day <span id="pb-day">1</span> <span>of <span id="pb-total">30</span></span></div>
+        <div class="pb-track"><div class="pb-fill" id="pb-fill" style="width:3%"></div></div>
+      </div>
+      <div class="pb-right">
+        <div class="pb-pct" id="pb-pct">0%</div>
+        <div class="pb-lbl">avg completion</div>
+      </div>
+    </div>
+
+    <div class="cal-section">
+      <div class="cal-head">
+        <span class="cal-month" id="cal-month">March 2026</span>
+        <div class="cal-navs"><button class="cal-nav-btn">‹</button><button class="cal-nav-btn">›</button></div>
+      </div>
+      <div class="dow-row"><div class="dow">S</div><div class="dow">M</div><div class="dow">T</div><div class="dow">W</div><div class="dow">T</div><div class="dow">F</div><div class="dow">S</div></div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-legend">
+        <div class="leg"><div class="leg-sw" style="background:var(--br)"></div>Complete</div>
+        <div class="leg"><div class="leg-sw" style="background:var(--brp);border:1px solid var(--brl)"></div>Partial</div>
+        <div class="leg"><div class="leg-sw" style="background:#f5f5f2;border:1px solid var(--border)"></div>Missed</div>
+        <div class="leg"><div class="leg-sw" style="border:2px solid var(--br);background:transparent"></div>Today</div>
+      </div>
+      <div class="edit-banner" id="edit-banner" style="display:none">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="flex-shrink:0"><circle cx="6.5" cy="6.5" r="5.5" stroke="#7A4010" stroke-width="1.2"/><line x1="6.5" y1="5.5" x2="6.5" y2="9" stroke="#7A4010" stroke-width="1.2" stroke-linecap="round"/><circle cx="6.5" cy="3.8" r=".6" fill="#7A4010"/></svg>
+        <span id="edit-banner-text">Recent days still editable — tap to update</span>
+      </div>
+    </div>
+
+    <div class="checkin" id="checkin">
+      <div class="ci-head">
+        <span class="ci-title" id="ci-title">Today</span>
+        <span class="ci-grade" id="ci-grade">0/0</span>
+      </div>
+      <div id="ci-tasks"></div>
+      <div class="ci-footer">
+        <span class="ci-lock" id="ci-lock">Locks at midnight</span>
+        <button class="log-btn" id="log-btn" onclick="logDay()">Log today ✓</button>
+      </div>
+    </div>
+
+    <div class="notif-strip" id="notif-strip">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="flex-shrink:0;margin-top:1px"><path d="M6.5 1.5C4.3 1.5 2.5 3.2 2.5 5.5V8.5L1.5 9.5H11.5L10.5 8.5V5.5C10.5 3.2 8.7 1.5 6.5 1.5Z" stroke="#7A4010" stroke-width="1.2"/><path d="M5 9.5C5 10.3 5.7 11 6.5 11C7.3 11 8 10.3 8 9.5" stroke="#7A4010" stroke-width="1.2"/></svg>
+      9 PM reminder — log today before midnight. Discipline looks like showing up.
+    </div>
+
+    <div class="share-row">
+      <button class="share-btn" onclick="openShare()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><path d="M9 2L13 6L9 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 6H5C3.3 6 2 7.1 2 9V13" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Share my progress
+      </button>
+      <button class="share-copy" onclick="openShare()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><rect x="1" y="4" width="8" height="9.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 3V2.5A1 1 0 015 1.5H12A1 1 0 0113 2.5V10A1 1 0 0112 11H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="tabnav" id="tabnav">
+    <button class="tab active" onclick="goTab('cal',this)"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/></svg>Today</button>
+    <button class="tab" onclick="goTab('results',this)"><svg viewBox="0 0 20 20"><polyline points="3,14 7,9 11,12 17,5"/><line x1="3" y1="17" x2="17" y2="17"/></svg>Results</button>
+  </div>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div class="screen" id="s-results">
+  <div class="cal-app-header">
+    <div class="cal-logo">Whol<em>i</em>fy</div>
+    <div class="av-sm" id="res-av" style="background:#2D6A4F">W</div>
+  </div>
+  <div class="results-scroll">
+    <div class="grade-hero">
+      <div class="gh-top"><span class="gh-label" id="res-label">30-Day Challenge</span><span class="gh-badge" id="res-badge">In progress</span></div>
+      <div class="grade-display">
+        <div class="grade-letter" id="res-grade">—</div>
+        <div class="grade-info">
+          <p id="res-pct-text">Complete your first day to see your grade</p>
+          <div class="grade-bar"><div class="grade-bar-fill" id="res-bar" style="width:0%"></div></div>
+          <div class="grade-note">Based on all tasks logged so far</div>
+        </div>
+      </div>
+    </div>
+    <div class="hm-section">
+      <div class="hm-title">Dimension breakdown</div>
+      <div class="hm-grid" id="hm-grid"></div>
+    </div>
+    <div class="s-lbl" style="margin-bottom:8px">Highlights</div>
+    <div class="stat-grid" id="stat-grid"></div>
+    <button class="new-challenge-btn" onclick="goSetup()">Start a new challenge</button>
+  </div>
+  <div class="tabnav">
+    <button class="tab" onclick="goTab('cal',this)"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/></svg>Today</button>
+    <button class="tab active" onclick="goTab('results',this)"><svg viewBox="0 0 20 20"><polyline points="3,14 7,9 11,12 17,5"/><line x1="3" y1="17" x2="17" y2="17"/></svg>Results</button>
+  </div>
+</div>
+
+<!-- ═══ SHARE MODAL ═══ -->
+<div class="modal-bg" id="share-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="share-card">
+      <div class="sc-hdr"><div class="sc-logo">Whol<em>i</em>fy</div><div class="sc-meta" id="sc-meta">30-Day · Day 1</div></div>
+      <div class="sc-cal" id="sc-cal"></div>
+      <div class="sc-stats">
+        <div class="sc-stat"><div class="sv" id="sc-day">1</div><div class="sl">days in</div></div>
+        <div class="sc-stat"><div class="sv" id="sc-pct">0%</div><div class="sl">avg done</div></div>
+        <div class="sc-stat"><div class="sv" id="sc-streak">0</div><div class="sl">streak</div></div>
+      </div>
+      <div class="sc-tag">wholify.app</div>
+    </div>
+    <div class="share-actions">
+      <button class="share-action-btn primary" onclick="copyShare()">Copy share card</button>
+      <button class="share-action-btn secondary" onclick="closeShare()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div class="edit-modal-bg" id="edit-modal">
+  <div class="edit-modal">
+    <h3 id="em-title">Edit Day</h3>
+    <p>This day is within your 3-day edit window. Mark it as complete?</p>
+    <div class="edit-btns">
+      <button class="edit-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="edit-confirm" onclick="confirmEdit()">Mark complete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+const S = {
+  name:'', color:'#2D6A4F', goals:[],
+  challengeDays:30, selectedTasks:[], dayStates:{},
+  obStep:1, obTotal:5, activeEl:null, editDay:null,
+  startDate: null, currentDay:1, streak:0, dayLogged:false,
+};
+
+const COLORS = ['#2D6A4F','#185FA5','#993556','#854F0B','#534AB7','#0F6E56'];
+
+const ELEMENTS = [
+  {id:'physical',name:'Physical',icon:'🏃',bg:'#D8F3DC',tasks:[
+    {name:'Workout',sub:'Cardio, strength, or sport',unit:'min',def:'45'},
+    {name:'Walk steps',sub:'Daily step goal',unit:'steps',def:'10000'},
+    {name:'Drink water',sub:'Daily hydration',unit:'oz',def:'64'},
+    {name:'Sleep',sub:'Quality sleep goal',unit:'hrs',def:'8'},
+  ]},
+  {id:'emotional',name:'Emotional',icon:'💛',bg:'#FCE4EC',tasks:[
+    {name:'Journal entry',sub:'Reflect or free write',unit:null},
+    {name:'Therapy / check-in',sub:'Session or self-reflection',unit:'min',def:'30'},
+    {name:'Mood log',sub:'Rate and note your day',unit:null},
+    {name:'Screen-free time',sub:'No screens before bed',unit:'min',def:'30'},
+  ]},
+  {id:'social',name:'Social',icon:'🤝',bg:'#E3F2FD',tasks:[
+    {name:'Connect with someone',sub:'Call, text, or meet',unit:null},
+    {name:'Act of kindness',sub:'Do something for someone',unit:null},
+    {name:'Limit social media',sub:'Daily cap on scroll time',unit:'min',def:'30'},
+    {name:'Family / friend time',sub:'Intentional time together',unit:'min',def:'30'},
+  ]},
+  {id:'intellectual',name:'Intellectual',icon:'📚',bg:'#EDE7F6',tasks:[
+    {name:'Read',sub:'Non-fiction, articles, or books',unit:'min',def:'30'},
+    {name:'Learn something new',sub:'Course, podcast, or video',unit:'min',def:'20'},
+    {name:'Practice a skill',sub:'Music, language, coding',unit:'min',def:'30'},
+    {name:'Solve a problem',sub:'Puzzle or mental challenge',unit:'min',def:'15'},
+  ]},
+  {id:'spiritual',name:'Spiritual',icon:'🧘',bg:'#FFF8E1',tasks:[
+    {name:'Meditate',sub:'Mindfulness or breath work',unit:'min',def:'10'},
+    {name:'Prayer / reflection',sub:'Personal spiritual practice',unit:'min',def:'10'},
+    {name:'Time in nature',sub:'Walk or sit outside',unit:'min',def:'20'},
+    {name:'Gratitude practice',sub:'List 3 things you\'re grateful for',unit:null},
+  ]},
+  {id:'environmental',name:'Environ.',icon:'🌿',bg:'#E8F5E9',tasks:[
+    {name:'Declutter one space',sub:'Desk, room, or drawer',unit:null},
+    {name:'Sustainable choice',sub:'Reduce, reuse, recycle',unit:null},
+    {name:'Clean eating',sub:'Whole foods, minimal processed',unit:null},
+    {name:'Time outside',sub:'Fresh air and daylight',unit:'min',def:'30'},
+  ]},
+  {id:'occupational',name:'Occupational',icon:'💼',bg:'#FFF3E0',tasks:[
+    {name:'Deep work session',sub:'Focused, distraction-free',unit:'min',def:'90'},
+    {name:'Learn a career skill',sub:'Professional development',unit:'min',def:'30'},
+    {name:'Clear your inbox',sub:'Process and respond',unit:null},
+    {name:'Set daily intentions',sub:'Write your top 3 priorities',unit:null},
+  ]},
+  {id:'financial',name:'Financial',icon:'💰',bg:'#E0F7FA',tasks:[
+    {name:'Track spending',sub:'Log every purchase',unit:null},
+    {name:'Save toward goal',sub:'Transfer to savings',unit:'$',def:'10'},
+    {name:'No-spend day',sub:'Zero discretionary spending',unit:null},
+    {name:'Finance review',sub:'Budget check-in',unit:'min',def:'15'},
+  ]},
+];
+
+// ── NAV ──────────────────────────────────────────────────────────────────────
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+name).classList.add('active');
+  if(name==='results') buildResults();
+}
+
+function goSetup(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  go('s-setup');
+}
+
+// ── SPLASH ───────────────────────────────────────────────────────────────────
+function buildSplashCal(){
+  const c=document.getElementById('splash-cal');
+  const st=['d','d','d','p','d','m','d','d','p','d','d','d','d','d','m','d','d','d','p','d'];
+  st.forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className='sc '+s;
+    div.style.animationDelay=(i*0.04)+'s';
+    if(s==='d') div.innerHTML=wMarkSvg(36,'white');
+    c.appendChild(div);
+  });
+}
+
+function demoMode(){
+  S.name='Alex'; S.color='#2D6A4F';
+  S.challengeDays=30; S.currentDay=14; S.streak=14;
+  S.startDate=new Date();
+  S.selectedTasks=[
+    {elId:'physical',name:'Workout 45 min',icon:'🏃',elName:'Physical',unit:'min',value:'45'},
+    {elId:'physical',name:'Drink 64oz water',icon:'🏃',elName:'Physical',unit:'oz',value:'64'},
+    {elId:'intellectual',name:'Read 30 min',icon:'📚',elName:'Intellectual',unit:'min',value:'30'},
+    {elId:'emotional',name:'Journal entry',icon:'💛',elName:'Emotional',unit:null,value:null},
+    {elId:'spiritual',name:'Meditate 10 min',icon:'🧘',elName:'Spiritual',unit:'min',value:'10'},
+  ];
+  for(let i=1;i<14;i++){
+    if([4,9].includes(i)) S.dayStates[i]='missed';
+    else if([3,7,11].includes(i)) S.dayStates[i]='partial';
+    else S.dayStates[i]='done';
+  }
+  S.dayStates[14]='today';
+  S.dayLogged=false;
+  updateCalAv();
+  updateStreakPill();
+  go('s-cal');
+  document.getElementById('tabnav').style.display='flex';
+  buildCal(); buildCheckin();
+}
+
+// ── ONBOARDING ───────────────────────────────────────────────────────────────
+function initOb(){
+  S.obStep=1;
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('ob1').classList.add('active');
+  buildColorRow();
+  updOb();
+}
+
+function buildColorRow(){
+  const row=document.getElementById('color-row');
+  row.innerHTML='';
+  COLORS.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='cswatch'+(c===S.color?' sel':'');
+    div.style.background=c;
+    div.style.borderColor=c===S.color?c:'transparent';
+    div.onclick=()=>{
+      S.color=c;
+      document.querySelectorAll('.cswatch').forEach(s=>{s.classList.remove('sel');s.style.borderColor='transparent'});
+      div.classList.add('sel');div.style.borderColor=c;
+      document.getElementById('av-circle').style.borderColor=c;
+      document.getElementById('av-initial').style.color=c;
+    };
+    row.appendChild(div);
+  });
+}
+
+function onNameInput(){
+  const v=document.getElementById('ob-name').value.trim();
+  S.name=v;
+  const init=v?v[0].toUpperCase():'W';
+  document.getElementById('av-initial').textContent=init;
+  document.getElementById('ob-next').disabled=!v;
+}
+
+function togGoal(el){
+  el.classList.toggle('sel');
+  const count=document.querySelectorAll('.goal-chip.sel').length;
+  const note=document.getElementById('goal-note');
+  note.textContent=count>0?count+' goal'+(count>1?'s':'')+' selected — nice.':'';
+  document.getElementById('ob-next').disabled=false;
+}
+
+function togNotif(tog,rowId){
+  tog.classList.toggle('off');
+  const row=document.getElementById(rowId);
+  if(row) row.style.display=tog.classList.contains('off')?'none':'flex';
+}
+
+function updOb(){
+  document.getElementById('ob-fill').style.width=((S.obStep/S.obTotal)*100)+'%';
+  const dots=document.getElementById('ob-dots');
+  dots.innerHTML='';
+  for(let i=1;i<=S.obTotal;i++){
+    const d=document.createElement('div');
+    d.className='ob-dot'+(i===S.obStep?' active':'');
+    dots.appendChild(d);
+  }
+  document.getElementById('ob-back').style.display=S.obStep>1?'block':'none';
+  const next=document.getElementById('ob-next');
+  next.textContent=S.obStep===S.obTotal?"Let's build →":'Continue';
+  if(S.obStep===1) next.disabled=!S.name;
+  else if(S.obStep===4||S.obStep===5) next.disabled=false;
+  else next.disabled=false;
+}
+
+function obNext(){
+  if(S.obStep===S.obTotal){finishOb();return;}
+  document.getElementById('ob'+S.obStep).classList.remove('active');
+  S.obStep++;
+  document.getElementById('ob'+S.obStep).classList.add('active');
+  if(S.obStep===4){
+    const init=S.name?S.name[0].toUpperCase():'W';
+    document.getElementById('av-initial').textContent=init;
+    document.getElementById('av-circle').style.borderColor=S.color;
+    document.getElementById('av-initial').style.color=S.color;
+  }
+  if(S.obStep===5){
+    const init=S.name?S.name[0].toUpperCase():'W';
+    document.getElementById('wh-initial').textContent=init;
+    document.getElementById('wh-av').style.background=S.color;
+    document.getElementById('wh-name').textContent='Hey, '+S.name+'.';
+  }
+  updOb();
+}
+
+function obBack(){
+  document.getElementById('ob'+S.obStep).classList.remove('active');
+  S.obStep--;
+  document.getElementById('ob'+S.obStep).classList.add('active');
+  updOb();
+}
+
+function finishOb(){
+  go('s-setup');
+  buildElGrid();
+  updSetupBtn();
+}
+
+// ── SETUP ────────────────────────────────────────────────────────────────────
+function selDur(el,days){
+  document.querySelectorAll('.dur-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); S.challengeDays=days;
+}
+
+function buildElGrid(){
+  const g=document.getElementById('el-grid');
+  g.innerHTML='';
+  ELEMENTS.forEach(el=>{
+    const count=S.selectedTasks.filter(t=>t.elId===el.id).length;
+    const isActive=S.activeEl===el.id;
+    const div=document.createElement('div');
+    div.className='el-btn'+(isActive?' active':count>0?' has-tasks':'');
+    div.innerHTML=`<span class="el-badge">${count||''}</span><span class="el-icon">${el.icon}</span><span class="el-name">${el.name}</span>`;
+    div.onclick=()=>selectEl(el.id);
+    g.appendChild(div);
+  });
+  const done=[...new Set(S.selectedTasks.map(t=>t.elId))].length;
+  document.getElementById('el-prog').style.width=(done/6*100)+'%';
+  document.getElementById('el-count-lbl').textContent=`(${done}/6 — pick 3 to 6)`;
+}
+
+function selectEl(elId){
+  S.activeEl=elId;
+  buildElGrid();
+  buildTaskPicker(elId);
+}
+
+function buildTaskPicker(elId){
+  const el=ELEMENTS.find(e=>e.id===elId);
+  const wrap=document.getElementById('task-picker-wrap');
+  wrap.innerHTML=`
+    <div class="task-picker">
+      <div class="tp-head">
+        <div class="tp-head-icon" style="background:${el.bg}">${el.icon}</div>
+        <div><div class="tp-head-title">${el.name} wellness</div><div class="tp-head-sub">Tap to add tasks to your challenge</div></div>
+      </div>
+      ${el.tasks.map((t,i)=>{
+        const sel=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===t.name)>=0;
+        return `<div class="task-opt${sel?' sel':''}" onclick="togTask('${elId}','${t.name}',${i})" id="topt-${elId}-${i}">
+          <div class="to-check">${sel?checkSvg():''}</div>
+          <div class="to-body">
+            <div class="to-name">${t.name}</div>
+            <div class="to-sub">${t.sub}</div>
+            ${t.unit?`<div class="to-input">
+              <input type="number" id="inp-${elId}-${i}" value="${sel?(S.selectedTasks.find(st=>st.elId===elId&&st.name===t.name)?.value||t.def):t.def}" oninput="updTaskVal('${elId}','${t.name}',this.value)"/>
+              <span class="to-unit">${t.unit}</span>
+            </div>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+      <div class="tp-custom">
+        <div class="tp-custom-row">
+          <input class="tp-custom-inp" id="ci-${elId}" placeholder="Custom task for ${el.name}..."/>
+          <button class="tp-custom-btn" onclick="addCustomTask('${elId}')">+ Add</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function checkSvg(){
+  return `<svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="width:11px;height:11px"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+function togTask(elId,name,idx){
+  const el=ELEMENTS.find(e=>e.id===elId);
+  const t=el.tasks[idx];
+  const ei=S.selectedTasks.findIndex(st=>st.elId===elId&&st.name===name);
+  if(ei>=0){
+    S.selectedTasks.splice(ei,1);
+  } else {
+    const val=t.unit?(document.getElementById(`inp-${elId}-${idx}`)?.value||t.def):null;
+    S.selectedTasks.push({elId,name,icon:el.icon,elName:el.name,unit:t.unit,value:val});
+  }
+  buildElGrid();
+  buildTaskPicker(elId);
+  updSelTasks();
+  updSetupBtn();
+}
+
+function updTaskVal(elId,name,val){
+  const t=S.selectedTasks.find(st=>st.elId===elId&&st.name===name);
+  if(t) t.value=val;
+}
+
+function addCustomTask(elId){
+  const inp=document.getElementById('ci-'+elId);
+  if(!inp||!inp.value.trim()) return;
+  const el=ELEMENTS.find(e=>e.id===elId);
+  S.selectedTasks.push({elId,name:inp.value.trim(),icon:el.icon,elName:el.name,unit:null,value:null,custom:true});
+  el.tasks.push({name:inp.value.trim(),sub:'Custom task',unit:null});
+  inp.value='';
+  buildElGrid(); buildTaskPicker(elId); updSelTasks(); updSetupBtn();
+}
+
+function updSelTasks(){
+  const wrap=document.getElementById('sel-tasks-wrap');
+  const container=document.getElementById('sel-tasks');
+  document.getElementById('task-count').textContent=S.selectedTasks.length;
+  if(S.selectedTasks.length===0){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const rows=S.selectedTasks.map((t,i)=>`
+    <div class="sel-task-row">
+      <span class="sel-task-icon">${t.icon}</span>
+      <span class="sel-task-name">${t.name}${t.value&&t.unit?' ('+t.value+' '+t.unit+')':''}</span>
+      <span class="sel-task-tag">${t.elName}</span>
+      <div class="sel-task-rm" onclick="removeTask(${i})">×</div>
+    </div>`).join('');
+  container.innerHTML='<div class="sel-tasks-head">Daily challenge tasks</div>'+rows;
+}
+
+function removeTask(i){
+  S.selectedTasks.splice(i,1);
+  buildElGrid(); updSelTasks(); updSetupBtn();
+  if(S.activeEl) buildTaskPicker(S.activeEl);
+}
+
+function updSetupBtn(){
+  const btn=document.getElementById('setup-btn');
+  const dims=[...new Set(S.selectedTasks.map(t=>t.elId))].length;
+  if(dims<3){btn.disabled=true;btn.textContent=`Select ${3-dims} more dimension${3-dims>1?'s':''}`;}
+  else if(dims>=6){btn.disabled=false;btn.textContent='Finish setup — start challenge';}
+  else{btn.disabled=false;btn.textContent=`Start challenge${dims<6?' (or add '+(6-dims)+' more)':''}`;}
+}
+
+function startChallenge(){
+  S.startDate=new Date();
+  S.currentDay=1; S.streak=0; S.dayLogged=false;
+  S.dayStates={};
+  S.dayStates[1]='today';
+  updateCalAv(); updateStreakPill();
+  document.getElementById('tabnav').style.display='flex';
+  go('s-cal');
+  buildCal(); buildCheckin(); updProgressBand();
+}
+
+// ── CALENDAR ─────────────────────────────────────────────────────────────────
+function wMarkSvg(sz, col){
+  const p=[[sz*.18,sz*.2],[sz*.36,sz*.78],[sz*.5,sz*.36],[sz*.64,sz*.78],[sz*.82,sz*.2]];
+  let lines='';
+  for(let i=0;i<p.length-1;i++) lines+=`<line x1="${p[i][0]}" y1="${p[i][1]}" x2="${p[i+1][0]}" y2="${p[i+1][1]}" stroke="${col}" stroke-width="${sz*.11}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" fill="none" style="width:${sz}px;height:${sz}px">${lines}</svg>`;
+}
+
+function buildCal(){
+  const grid=document.getElementById('cal-grid');
+  grid.innerHTML='';
+  const today=S.currentDay;
+  const total=S.challengeDays;
+  const editWin=3;
+  for(let d=1;d<=total;d++){
+    const cell=document.createElement('div');
+    const st=S.dayStates[d]||'future';
+    const editable=d<today&&d>=today-editWin&&st!=='done';
+    cell.className='cd '+st+(editable?' editable':'');
+    if(st==='done'){
+      cell.innerHTML=`<span class="cdn">${d}</span><div class="wm">${wMarkSvg(18,'white')}</div>`;
+    } else {
+      cell.innerHTML=`<span class="cdn">${d}</span>`;
+    }
+    if(editable) cell.onclick=()=>openEditModal(d);
+    grid.appendChild(cell);
+  }
+  // filler cells for grid alignment
+  const remaining=total%7===0?0:7-(total%7);
+  for(let i=0;i<remaining;i++){
+    const e=document.createElement('div');e.className='cd empty';grid.appendChild(e);
+  }
+  // show/hide edit banner
+  const editableDays=[];
+  for(let d=today-editWin;d<today;d++){
+    if(d>0&&S.dayStates[d]!=='done') editableDays.push(d);
+  }
+  const banner=document.getElementById('edit-banner');
+  if(editableDays.length>0){
+    banner.style.display='flex';
+    document.getElementById('edit-banner-text').textContent=`Day${editableDays.length>1?'s':''} ${editableDays.join(', ')} still editable — tap to update`;
+  } else {
+    banner.style.display='none';
+  }
+  buildShareCal();
+}
+
+function buildCheckin(){
+  const tasks=S.selectedTasks.map(t=>({...t,done:false}));
+  S.todayTasks=tasks;
+  renderCheckin();
+}
+
+function renderCheckin(){
+  const tasks=S.todayTasks||[];
+  const list=document.getElementById('ci-tasks');
+  list.innerHTML='';
+  tasks.forEach((t,i)=>{
+    const row=document.createElement('div');
+    row.className='task-row'+(t.done?' ck':'');
+    row.innerHTML=`<div class="tr-check">${t.done?checkSvg():''}</div><span class="tr-label">${t.name}${t.value&&t.unit?' · '+t.value+' '+t.unit:''}</span><span class="tr-tag">${t.elName}</span>`;
+    row.onclick=()=>{t.done=!t.done;renderCheckin();};
+    list.appendChild(row);
+  });
+  const done=(S.todayTasks||[]).filter(t=>t.done).length;
+  const total=(S.todayTasks||[]).length;
+  const pct=total>0?done/total:0;
+  const grade=pct===1?'A':pct>=.8?'B+':pct>=.6?'B':pct>=.4?'C':'D';
+  const gradeColor=pct>=.8?'var(--br)':pct>=.6?'#2E7D32':'var(--ac)';
+  const gradeEl=document.getElementById('ci-grade');
+  gradeEl.innerHTML=`${done}/${total} &nbsp;<strong style="color:${gradeColor}">${grade}</strong>`;
+  const today=new Date();
+  document.getElementById('ci-title').textContent=`Today — ${today.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+}
+
+function logDay(){
+  const done=(S.todayTasks||[]).filter(t=>t.done).length;
+  const total=(S.todayTasks||[]).length;
+  if(S.dayLogged) return;
+  S.dayStates[S.currentDay]=done===total?'done':done>0?'partial':'missed';
+  S.dayLogged=true;
+  if(done>0) S.streak++;
+  buildCal();
+  const btn=document.getElementById('log-btn');
+  btn.textContent='Day logged ✓';
+  btn.classList.add('done-btn');
+  document.getElementById('ci-lock').textContent=done+'/'+total+' tasks · locked';
+  document.getElementById('notif-strip').style.display='none';
+  updateStreakPill();
+  updProgressBand();
+  showToast(done===total?'Perfect day. W mark earned! 🏆':`${done}/${total} tasks — ${done===total?'A':done/total>=.8?'B+':done/total>=.6?'B':'C'} grade logged.`);
+}
+
+function updProgressBand(){
+  const done=Object.values(S.dayStates).filter(s=>s==='done'||s==='partial').length;
+  const completionRates=[];
+  Object.entries(S.dayStates).forEach(([d,st])=>{
+    if(st==='done') completionRates.push(1);
+    else if(st==='partial') completionRates.push(0.6);
+  });
+  const avg=completionRates.length>0?Math.round(completionRates.reduce((a,b)=>a+b,0)/completionRates.length*100):0;
+  document.getElementById('pb-day').textContent=S.currentDay;
+  document.getElementById('pb-total').textContent=S.challengeDays;
+  document.getElementById('pb-pct').textContent=avg+'%';
+  document.getElementById('pb-fill').style.width=(S.currentDay/S.challengeDays*100)+'%';
+  document.getElementById('pb-challenge').textContent=S.challengeDays+'-Day Challenge';
+}
+
+function openEditModal(d){
+  S.editDay=d;
+  document.getElementById('em-title').textContent='Edit Day '+d;
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEditModal(){document.getElementById('edit-modal').classList.remove('open');S.editDay=null;}
+function confirmEdit(){
+  if(S.editDay){S.dayStates[S.editDay]='done';buildCal();}
+  closeEditModal();
+  showToast('Day '+S.editDay+' updated ✓');
+}
+
+function updateCalAv(){
+  const init=S.name?S.name[0].toUpperCase():'W';
+  ['cal-av','res-av'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.textContent=init;el.style.background=S.color;}
+  });
+}
+
+function updateStreakPill(){
+  const pill=document.getElementById('streak-pill');
+  if(S.streak>0){
+    pill.style.display='flex';
+    document.getElementById('streak-num').textContent=S.streak;
+  }
+}
+
+// ── SHARE ────────────────────────────────────────────────────────────────────
+function buildShareCal(){
+  const sc=document.getElementById('sc-cal');
+  if(!sc) return;
+  sc.innerHTML='';
+  for(let d=1;d<=S.challengeDays;d++){
+    const c=document.createElement('div');
+    const st=S.dayStates[d]||'future';
+    c.className='scc '+(st==='done'?'d':st==='partial'?'p':st==='missed'?'m':st==='today'?'t':'f');
+    if(st==='done') c.innerHTML=`<span class="scc-n">${d}</span>${wMarkSvg(12,'white')}`;
+    else c.innerHTML=`<span class="scc-n">${d}</span>`;
+    sc.appendChild(c);
+  }
+  const done=Object.values(S.dayStates).filter(s=>s==='done').length;
+  const pcts=Object.values(S.dayStates).map(s=>s==='done'?1:s==='partial'?0.6:0);
+  const avg=pcts.length>0?Math.round(pcts.reduce((a,b)=>a+b,0)/pcts.length*100):0;
+  document.getElementById('sc-day').textContent=S.currentDay;
+  document.getElementById('sc-pct').textContent=avg+'%';
+  document.getElementById('sc-streak').textContent=S.streak;
+  document.getElementById('sc-meta').textContent=S.challengeDays+'-Day · Day '+S.currentDay;
+}
+
+function openShare(){buildShareCal();document.getElementById('share-modal').classList.add('open');}
+function closeShare(){document.getElementById('share-modal').classList.remove('open');}
+function copyShare(){closeShare();showToast('Share card ready — screenshot to save & post!');}
+
+// ── RESULTS ──────────────────────────────────────────────────────────────────
+function buildResults(){
+  const states=Object.values(S.dayStates).filter(s=>s!=='today'&&s!=='future');
+  const doneCount=states.filter(s=>s==='done').length;
+  const partialCount=states.filter(s=>s==='partial').length;
+  const total=states.length;
+  const pct=total>0?Math.round((doneCount+partialCount*.6)/total*100):0;
+  const grade=pct>=95?'A':pct>=88?'A-':pct>=82?'B+':pct>=75?'B':pct>=68?'B-':pct>=60?'C+':pct>=50?'C':'D';
+  document.getElementById('res-grade').textContent=total>0?grade:'—';
+  document.getElementById('res-pct-text').textContent=total>0?pct+'% overall completion':'Log your first day to see your grade';
+  document.getElementById('res-bar').style.width=pct+'%';
+  document.getElementById('res-label').textContent=S.challengeDays+'-Day Challenge';
+  document.getElementById('res-badge').textContent=S.currentDay>=S.challengeDays?'Complete':'In progress';
+
+  // heat map
+  const elIds=[...new Set(S.selectedTasks.map(t=>t.elId))];
+  const hm=document.getElementById('hm-grid');
+  if(elIds.length===0){hm.innerHTML='<div style="font-size:13px;color:var(--t2);grid-column:1/-1;padding:12px 0">Complete your first day to see dimension breakdown</div>';return;}
+  const pctVal=p=>p>=90?{bg:'#1B4332',txt:'white',pct_txt:'#F4A261'}:p>=75?{bg:'#2D6A4F',txt:'white',pct_txt:'#F4A261'}:p>=60?{bg:'#52B788',txt:'white',pct_txt:'white'}:p>=45?{bg:'#D8F3DC',txt:'#1B4332',pct_txt:'#2D6A4F'}:{bg:'#f0f4f2',txt:'#6B7C74',pct_txt:'#9aaba3'};
+  hm.innerHTML=elIds.map(id=>{
+    const el=ELEMENTS.find(e=>e.id===id);
+    const fake=Math.round(60+Math.random()*35);
+    const c=pctVal(fake);
+    return `<div class="hm-cell" style="background:${c.bg}"><span class="hm-icon">${el.icon}</span><div class="hm-name" style="color:${c.txt};opacity:.7">${el.name.substring(0,5)}</div><div class="hm-val" style="color:${c.pct_txt}">${fake}%</div></div>`;
+  }).join('');
+
+  // stats
+  const sg=document.getElementById('stat-grid');
+  sg.innerHTML=[
+    {v:doneCount,l:'Complete days',f:'W marks earned'},
+    {v:S.challengeDays+'-Day',l:'Challenge',f:S.currentDay+' of '+S.challengeDays+' days in'},
+    {v:S.streak+'d',l:'Best streak',f:'Consecutive complete days'},
+    {v:S.selectedTasks.length,l:'Daily tasks',f:'Across '+elIds.length+' dimensions'},
+  ].map(s=>`<div class="stat-card"><div class="stat-v">${s.v}</div><div class="stat-l">${s.l}</div><div class="stat-f">${s.f}</div></div>`).join('');
+}
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildSplashCal();
+document.getElementById('tabnav').style.display='none';
+</script>
+</body>
+</html>
