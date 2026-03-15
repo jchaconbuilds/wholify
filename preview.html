@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Wholify — Preview the App</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --br:#2D6A4F;--brl:#52B788;--brp:#D8F3DC;--brd:#1B4332;
+  --ac:#F4A261;--acl:#FFF3E8;--acd:#7A4010;
+  --bg:#F7F9F7;--card:#FFFFFF;--dark:#111C16;
+  --t:#1a1a1a;--t2:#6B7C74;--t3:#9aaba3;
+  --border:#E0EBE4;--border2:#C4D4C8;
+  --fd:'Playfair Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:#0d0d0d;font-family:var(--fb)}
+
+/* ── OUTER SHELL ── */
+#shell{
+  display:flex;flex-direction:column;align-items:center;
+  height:100vh;padding:0;position:relative;
+  background:#0d0d0d;
+}
+
+/* ── TOUR HEADER ── */
+#tour-header{
+  width:100%;max-width:430px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px 10px;flex-shrink:0;
+}
+.tour-logo{font-family:var(--fd);font-size:20px;color:white;letter-spacing:-.3px}
+.tour-logo em{color:var(--ac);font-style:normal}
+.tour-exit{font-size:12px;color:rgba(255,255,255,.4);cursor:pointer;padding:6px 12px;border:1px solid rgba(255,255,255,.15);border-radius:20px;text-decoration:none}
+.tour-exit:hover{color:white;border-color:rgba(255,255,255,.4)}
+
+/* ── PROGRESS DOTS ── */
+#tour-dots{
+  display:flex;gap:5px;justify-content:center;
+  padding:0 0 10px;flex-shrink:0;
+}
+.tdot{width:5px;height:5px;border-radius:3px;background:rgba(255,255,255,.2);transition:all .3s}
+.tdot.on{background:var(--ac);width:16px}
+
+/* ── PHONE FRAME ── */
+#phone{
+  width:100%;max-width:390px;
+  flex:1;min-height:0;
+  background:var(--bg);
+  border-radius:36px;
+  overflow:hidden;
+  position:relative;
+  display:flex;flex-direction:column;
+}
+
+/* ── SCREENS ── */
+.tscreen{display:none;flex:1;flex-direction:column;overflow:hidden}
+.tscreen.active{display:flex}
+
+/* ── SCREEN LABEL ── */
+.screen-badge{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.55);color:white;font-size:11px;font-weight:500;
+  padding:4px 12px;border-radius:20px;white-space:nowrap;z-index:20;
+  pointer-events:none;
+}
+
+/* ── NAV ARROWS ── */
+#nav-prev,#nav-next{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.12);border:none;cursor:pointer;
+  color:white;font-size:20px;display:flex;align-items:center;justify-content:center;
+  z-index:30;transition:background .15s;
+}
+#nav-prev:hover,#nav-next:hover{background:rgba(255,255,255,.25)}
+#nav-prev{left:4px}#nav-next{right:4px}
+
+/* ── CTA STRIP ── */
+#cta-strip{
+  width:100%;max-width:430px;padding:12px 20px 20px;flex-shrink:0;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.cta-hint{font-size:12px;color:rgba(255,255,255,.35);text-align:center}
+.cta-btn{
+  width:100%;padding:14px;background:var(--ac);color:var(--brd);
+  border:none;border-radius:14px;font-family:var(--fb);font-size:15px;font-weight:500;
+  cursor:pointer;transition:opacity .15s;
+}
+.cta-btn:active{opacity:.85}
+.cta-btn.ghost{background:rgba(255,255,255,.08);color:white;margin-top:2px;font-size:13px;padding:11px}
+
+/* ═══════════════════════════════════
+   SCREEN 1 — SPLASH
+═══════════════════════════════════ */
+#ts1{background:var(--dark);justify-content:space-between;padding:40px 28px 32px}
+.s1-cal{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:28px}
+.s1c{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.s1c.d{background:var(--br)}.s1c.p{background:#1f3d2e;border:1px solid #2a5a3e}
+.s1c.m{background:#161f1a}.s1c.f{background:#0f1810;border:0.5px solid #1a2a1e}
+.s1-logo{font-family:var(--fd);font-size:44px;font-weight:400;color:white;letter-spacing:-1.5px;margin-bottom:6px}
+.s1-logo em{color:var(--ac);font-style:normal}
+.s1-tag{font-size:13px;color:#7aab8e;text-align:center;line-height:1.6;margin-bottom:24px}
+.s1-btns{display:flex;flex-direction:column;gap:8px}
+.s1-btn1{padding:14px;background:var(--ac);color:var(--dark);border:none;border-radius:14px;font-family:var(--fb);font-size:14px;font-weight:500}
+.s1-btn2{padding:13px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:none;border-radius:14px;font-family:var(--fb);font-size:13px;border:1.5px solid rgba(255,255,255,.15)}
+
+/* ═══════════════════════════════════
+   SCREEN 2 — ONBOARDING
+═══════════════════════════════════ */
+#ts2{background:var(--bg)}
+.ob-prog{height:3px;background:var(--border);flex-shrink:0}
+.ob-fill{height:100%;background:var(--br);width:40%;border-radius:2px}
+.ob-body{flex:1;padding:24px 20px;overflow-y:auto;display:flex;flex-direction:column}
+.ob-icon{width:44px;height:44px;border-radius:12px;background:var(--brp);display:flex;align-items:center;justify-content:center;margin-bottom:14px;flex-shrink:0}
+.ob-h{font-family:var(--fd);font-size:22px;font-weight:500;color:var(--brd);margin-bottom:6px;line-height:1.2}
+.ob-sub{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:18px}
+.goal-chips{display:flex;flex-wrap:wrap;gap:7px}
+.gc{padding:8px 14px;border-radius:22px;border:1.5px solid var(--border2);background:var(--card);font-size:12px;color:var(--t2);cursor:pointer;transition:all .15s;user-select:none}
+.gc.sel{border-color:var(--br);background:var(--brp);color:var(--brd);font-weight:500}
+.ob-footer{padding:14px 20px 20px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)}
+.ob-next{width:100%;padding:13px;background:var(--br);color:white;border:none;border-radius:12px;font-family:var(--fb);font-size:14px;font-weight:500;cursor:pointer}
+
+/* ═══════════════════════════════════
+   SCREEN 3 — CHALLENGE SETUP
+═══════════════════════════════════ */
+#ts3{background:var(--bg)}
+.setup-hdr{padding:16px 18px 0;flex-shrink:0}
+.setup-title{font-family:var(--fd);font-size:20px;font-weight:500;color:var(--brd)}
+.setup-sub{font-size:12px;color:var(--t2);margin-top:3px}
+.setup-body{flex:1;overflow-y:auto;padding:14px 18px}
+.s-lbl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.dur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.dur-card{border:2px solid var(--border);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;background:var(--card);transition:all .15s}
+.dur-card.sel{border-color:var(--br);background:var(--brp)}
+.dur-num{font-family:var(--fd);font-size:26px;font-weight:500;color:var(--br)}
+.dur-lbl{font-size:10px;color:var(--t2)}
+.el-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.el-btn{border:2px solid var(--border);border-radius:11px;padding:9px 5px 7px;text-align:center;cursor:pointer;background:var(--card);transition:all .15s}
+.el-btn.on{border-color:var(--br);background:var(--brp)}
+.el-btn.full{border-color:var(--br);background:var(--br)}
+.el-icon{font-size:16px;display:block;margin-bottom:3px}
+.el-name{font-size:9px;font-weight:500;color:var(--t2)}
+.el-btn.on .el-name{color:var(--brd)}
+.el-btn.full .el-name{color:rgba(255,255,255,.85)}
+.setup-btn{width:100%;padding:13px;background:var(--br);color:white;border:none;border-radius:12px;font-family:var(--fb);font-size:14px;font-weight:500;cursor:pointer;margin-top:4px}
+
+/* ═══════════════════════════════════
+   SCREEN 4 — CALENDAR
+═══════════════════════════════════ */
+#ts4{background:var(--bg)}
+.cal-hdr{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
+.cal-logo{font-family:var(--fd);font-size:20px;color:var(--br)}
+.cal-logo em{color:var(--ac);font-style:normal}
+.streak-pill{display:flex;align-items:center;gap:4px;background:var(--acl);color:var(--acd);font-size:11px;font-weight:500;padding:4px 10px;border-radius:16px}
+.cal-scroll{flex:1;overflow-y:auto;padding:0 0 8px}
+.prog-band{margin:12px 14px 0;background:var(--br);border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.pb-sub{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:2px}
+.pb-main{font-size:17px;font-weight:500;color:white}
+.pb-main span{font-size:12px;font-weight:400;opacity:.6}
+.pb-track{height:3px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:6px;width:100px;overflow:hidden}
+.pb-fill2{height:100%;background:var(--ac);border-radius:2px}
+.pb-pct{font-size:22px;font-weight:500;color:var(--ac)}
+.pb-lbl2{font-size:9px;color:rgba(255,255,255,.45)}
+.cal-sec{padding:12px 14px 0}
+.cal-month{font-size:13px;font-weight:500;color:var(--t);margin-bottom:8px}
+.dow-row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.dow{text-align:center;font-size:10px;font-weight:500;color:var(--t3)}
+.cg2{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cd{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;transition:transform .1s}
+.cd:active{transform:scale(.88)}
+.cd.empty{pointer-events:none}
+.cd.done2{background:var(--br)}
+.cd.partial2{background:var(--brp);border:1.5px solid var(--brl)}
+.cd.missed2{background:#f5f5f2;border:1px solid var(--border)}
+.cd.today2{background:var(--card);border:2.5px solid var(--br)}
+.cd.future2{background:var(--brp);border:1px solid var(--brl);opacity:.45;pointer-events:none}
+.cd.out2{background:transparent;opacity:.2;pointer-events:none}
+.cdn2{font-size:9px;font-weight:500;color:var(--t3)}
+.cd.done2 .cdn2{color:rgba(255,255,255,.4);position:absolute;top:1px;left:0;right:0;text-align:center;font-size:7px}
+.cd.today2 .cdn2{color:var(--brd);font-weight:600;font-size:11px}
+.wm2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding-top:4px}
+
+/* ═══════════════════════════════════
+   SCREEN 5 — DAILY CHECK-IN
+═══════════════════════════════════ */
+#ts5{background:var(--bg)}
+.ci-hdr2{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
+.ci-date{font-size:14px;font-weight:500;color:var(--t)}
+.ci-grade2{font-size:13px;color:var(--t2)}
+.ci-grade2 strong{color:var(--br);font-weight:600}
+.ci-tasks2{flex:1;overflow-y:auto}
+.trow{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.trow:active{background:var(--bg)}
+.trow.ck2{background:var(--brp)}
+.tcheck{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.trow.ck2 .tcheck{background:var(--br);border-color:var(--br)}
+.tlabel{font-size:13px;flex:1;color:var(--t)}
+.trow.ck2 .tlabel{color:var(--t2);text-decoration:line-through;text-decoration-color:var(--brl)}
+.ttag{font-size:10px;padding:2px 7px;border-radius:9px;background:var(--brp);color:var(--brd)}
+.ci-footer2{padding:11px 16px;border-top:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ci-lock2{font-size:11px;color:var(--t3)}
+.log-act-btn{padding:8px 16px;background:var(--bg);color:var(--br);border:2px solid var(--br);border-radius:9px;font-family:var(--fb);font-size:12px;font-weight:500;cursor:pointer}
+.log-day-row{padding:10px 16px;flex-shrink:0}
+.log-day-btn2{width:100%;padding:12px;background:var(--br);color:white;border:none;border-radius:12px;font-family:var(--fb);font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
+.log-day-btn2:active{background:var(--brd)}
+.log-day-btn2.done{background:var(--brl);pointer-events:none}
+
+/* ═══════════════════════════════════
+   SCREEN 6 — RESULTS
+═══════════════════════════════════ */
+#ts6{background:var(--bg)}
+.res-hdr{padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
+.res-title{font-family:var(--fd);font-size:18px;color:var(--brd)}
+.res-scroll{flex:1;overflow-y:auto;padding:12px 14px 16px}
+.grade-hero2{background:var(--brd);border-radius:16px;padding:18px;margin-bottom:12px}
+.gh-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px}
+.grade-row{display:flex;align-items:center;gap:14px}
+.grade-letter2{font-family:var(--fd);font-size:52px;color:var(--ac);line-height:1}
+.grade-info2 p{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:4px}
+.grade-bar2{height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.grade-bar-fill2{height:100%;background:var(--ac);border-radius:2px;width:81%}
+.grade-note2{font-size:10px;color:rgba(255,255,255,.35);margin-top:4px}
+.hm-title{font-size:10px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.hm-grid2{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.hm-cell2{border-radius:10px;padding:9px 5px;text-align:center}
+.hm-icon2{font-size:14px;display:block;margin-bottom:3px}
+.hm-name2{font-size:9px;margin-bottom:2px}
+.hm-val2{font-size:11px;font-weight:600}
+.stat-grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.stat-card2{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+.stat-v2{font-family:var(--fd);font-size:22px;color:var(--brd);margin-bottom:2px}
+.stat-l2{font-size:11px;color:var(--t2)}
+.stat-f2{font-size:10px;color:var(--br);margin-top:4px;font-style:italic}
+
+/* swipe hint */
+.swipe-hint{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap;pointer-events:none;animation:fadeHint 3s ease 1s both}
+@keyframes fadeHint{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
+</style>
+</head>
+<body>
+<div id="shell">
+
+  <div id="tour-header">
+    <div class="tour-logo">Whol<em>i</em>fy</div>
+    <a class="tour-exit" href="index.html">← Back</a>
+  </div>
+
+  <div id="tour-dots"></div>
+
+  <div style="position:relative;flex:1;width:100%;max-width:390px;min-height:0;display:flex;align-items:stretch">
+    <button id="nav-prev" onclick="move(-1)">‹</button>
+    <button id="nav-next" onclick="move(1)">›</button>
+
+    <div id="phone">
+
+      <!-- SCREEN 1: SPLASH -->
+      <div class="tscreen active" id="ts1">
+        <div class="screen-badge">1 of 6 — Splash</div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px 20px">
+          <div class="s1-cal" id="s1cal"></div>
+          <div class="s1-logo">Whol<em>i</em>fy</div>
+          <div class="s1-tag">Change how you look at change.</div>
+        </div>
+        <div style="padding:0 24px 32px;display:flex;flex-direction:column;gap:8px">
+          <div class="s1-btn1" style="text-align:center">Get started — it's free</div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: ONBOARDING -->
+      <div class="tscreen" id="ts2">
+        <div class="screen-badge">2 of 6 — Onboarding</div>
+        <div class="ob-prog"><div class="ob-fill"></div></div>
+        <div class="ob-body">
+          <div class="ob-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#2D6A4F" stroke-width="2"><circle cx="11" cy="7" r="4"/><path d="M3 19c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <div class="ob-h">What are your goals?</div>
+          <div class="ob-sub">Select everything that resonates. Real change rarely has just one reason behind it.</div>
+          <div class="goal-chips">
+            <div class="gc sel" onclick="this.classList.toggle('sel')">Build better habits</div>
+            <div class="gc" onclick="this.classList.toggle('sel')">Physical health</div>
+            <div class="gc sel" onclick="this.classList.toggle('sel')">Mental wellbeing</div>
+            <div class="gc" onclick="this.classList.toggle('sel')">More energy</div>
+            <div class="gc sel" onclick="this.classList.toggle('sel')">Personal growth</div>
+            <div class="gc" onclick="this.classList.toggle('sel')">Accountability</div>
+            <div class="gc" onclick="this.classList.toggle('sel')">Reduce stress</div>
+            <div class="gc" onclick="this.classList.toggle('sel')">Just exploring</div>
+          </div>
+        </div>
+        <div class="ob-footer">
+          <div class="ob-dots2" style="display:flex;gap:5px;justify-content:center;margin-bottom:10px" id="ob-dots2"></div>
+          <button class="ob-next" onclick="move(1)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: CHALLENGE SETUP -->
+      <div class="tscreen" id="ts3">
+        <div class="screen-badge">3 of 6 — Challenge setup</div>
+        <div class="setup-hdr">
+          <div class="setup-title">Build your challenge</div>
+          <div class="setup-sub">Choose duration and focus areas</div>
+        </div>
+        <div class="setup-body" style="overflow-y:auto;flex:1;padding:14px 18px 100px">
+          <div class="s-lbl">Duration</div>
+          <div class="dur-grid">
+            <div class="dur-card sel" onclick="selDur(this)"><div class="dur-num">30</div><div class="dur-lbl">days</div></div>
+            <div class="dur-card" onclick="selDur(this)"><div class="dur-num">60</div><div class="dur-lbl">days</div></div>
+            <div class="dur-card" onclick="selDur(this)"><div class="dur-num">90</div><div class="dur-lbl">days</div></div>
+          </div>
+          <div class="s-lbl">Wellness focus <span id="el-count" style="color:var(--br);font-weight:500;text-transform:none;letter-spacing:0">(tap to select)</span></div>
+          <div class="el-grid" id="el-grid"></div>
+
+          <!-- Inline task picker — shows when a dimension is tapped -->
+          <div id="preview-task-picker" style="display:none;margin-top:14px"></div>
+
+          <!-- Master task list -->
+          <div id="preview-task-list" style="display:none;margin-top:14px">
+            <div class="s-lbl">Your tasks (<span id="prev-task-count">0</span>)</div>
+            <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r,14px);overflow:hidden" id="prev-task-rows"></div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:12px 18px 20px;background:linear-gradient(to top,var(--bg) 70%,transparent)">
+          <button class="setup-btn" onclick="move(1)">Start my 30-day challenge →</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: CALENDAR -->
+      <div class="tscreen" id="ts4">
+        <div class="screen-badge">4 of 6 — Calendar</div>
+        <div class="cal-hdr">
+          <div class="cal-logo">Whol<em>i</em>fy</div>
+          <div class="streak-pill">
+            <svg width="8" height="11" viewBox="0 0 8 11" fill="#F4A261"><path d="M4.8 0S5.2 2.8 3.4 4c0 0 .4-1.8-.8-1.8C2.6 2.2 0 4 0 6.2 0 8.4 1.8 11 4 11s4-2.6 4-4.8C8 3.6 5.8 2.2 4.8 0z"/></svg>
+            14d streak
+          </div>
+        </div>
+        <div class="cal-scroll">
+          <div class="prog-band">
+            <div>
+              <div class="pb-sub">30-Day Challenge</div>
+              <div class="pb-main">Day <span style="font-size:22px;font-weight:500;color:white;opacity:1">14</span> <span>of 30</span></div>
+              <div class="pb-track"><div class="pb-fill2" style="width:47%"></div></div>
+            </div>
+            <div style="text-align:right">
+              <div class="pb-pct" id="cal-pct">81%</div>
+              <div class="pb-lbl2">avg completion</div>
+            </div>
+          </div>
+          <div class="cal-sec">
+            <div class="cal-month" id="cal-month-lbl">March 2026</div>
+            <div class="dow-row"><div class="dow">S</div><div class="dow">M</div><div class="dow">T</div><div class="dow">W</div><div class="dow">T</div><div class="dow">F</div><div class="dow">S</div></div>
+            <div class="cg2" id="cal-grid2"></div>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--t2)"><div style="width:9px;height:9px;border-radius:2px;background:var(--br)"></div>Complete</div>
+              <div style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--t2)"><div style="width:9px;height:9px;border-radius:2px;background:var(--brp);border:1px solid var(--brl)"></div>Partial</div>
+              <div style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--t2)"><div style="width:9px;height:9px;border-radius:2px;background:#f5f5f2;border:1px solid var(--border)"></div>Missed</div>
+              <div style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--t2)"><div style="width:9px;height:9px;border-radius:2px;border:2px solid var(--br)"></div>Today</div>
+            </div>
+          </div>
+          <div style="padding:10px 14px 4px">
+            <button style="width:100%;padding:11px;background:var(--br);color:white;border:none;border-radius:12px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer" onclick="move(1)">Log today →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: CHECK-IN -->
+      <div class="tscreen" id="ts5">
+        <div class="screen-badge">5 of 6 — Daily check-in</div>
+        <div class="ci-hdr2">
+          <span class="ci-date" id="ci-date-lbl">Today — Mar 15</span>
+          <span class="ci-grade2" id="ci-grade-lbl">0/5 &nbsp;<strong>D</strong></span>
+        </div>
+        <div class="ci-tasks2" id="ci-tasks2"></div>
+        <div class="ci-footer2">
+          <span class="ci-lock2">Locks at midnight</span>
+          <button class="log-act-btn" onclick="logActivity()">Log activity</button>
+        </div>
+        <div class="log-day-row">
+          <button class="log-day-btn2" id="log-day-btn2" onclick="logDayPreview()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="width:14px;height:14px"><polyline points="2,7 5.5,11 12,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Log Day
+          </button>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: RESULTS -->
+      <div class="tscreen" id="ts6">
+        <div class="screen-badge">6 of 6 — Results</div>
+        <div class="res-hdr">
+          <div class="res-title">Challenge results</div>
+          <div style="font-size:11px;background:var(--brp);color:var(--brd);padding:3px 9px;border-radius:10px">In progress</div>
+        </div>
+        <div class="res-scroll">
+          <div class="grade-hero2">
+            <div class="gh-lbl">30-Day Challenge · Day 14 of 30</div>
+            <div class="grade-row">
+              <div class="grade-letter2" id="res-grade-lbl">B+</div>
+              <div class="grade-info2">
+                <p id="res-pct-lbl">81% overall completion</p>
+                <div class="grade-bar2"><div class="grade-bar-fill2" id="res-bar2"></div></div>
+                <div class="grade-note2">Based on all tasks logged so far</div>
+              </div>
+            </div>
+          </div>
+          <div class="hm-title" style="margin-bottom:7px">Dimension breakdown</div>
+          <div class="hm-grid2" id="hm-grid2"></div>
+          <div class="hm-title">Highlights</div>
+          <div class="stat-grid2">
+            <div class="stat-card2"><div class="stat-v2">11</div><div class="stat-l2">Complete days</div><div class="stat-f2">W marks earned</div></div>
+            <div class="stat-card2"><div class="stat-v2">14d</div><div class="stat-l2">Streak</div><div class="stat-f2">Consecutive days</div></div>
+            <div class="stat-card2"><div class="stat-v2">5</div><div class="stat-l2">Daily tasks</div><div class="stat-f2">Across 4 dimensions</div></div>
+            <div class="stat-card2"><div class="stat-v2">81%</div><div class="stat-l2">Avg completion</div><div class="stat-f2">B+ grade overall</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phone -->
+  </div>
+
+  <div class="swipe-hint" id="swipe-hint">← swipe or use arrows to explore →</div>
+
+  <div id="cta-strip">
+    <div class="cta-hint" id="cta-hint">See the full experience — or jump straight in.</div>
+    <button class="cta-btn" onclick="window.location.href='index.html'">Start your challenge — it's free</button>
+  </div>
+
+</div>
+
+<script>
+const SCREENS=6;
+let cur=0;
+
+const HINTS=[
+  'The splash screen — your first impression.',
+  'Tap any goal chip to select or deselect it.',
+  'Tap a duration and toggle your wellness dimensions.',
+  'A real calendar showing 14 days in. Green = W marks earned.',
+  'Tap tasks to check them off. Log activity saves progress. Log Day closes the day.',
+  'Your grade, breakdown by dimension, and streaks — all in one view.',
+];
+
+const CTAHINTS=[
+  'See the full experience below — or jump straight in.',
+  'Tap goal chips — they toggle on and off.',
+  'Tap any dimension to add it to your challenge.',
+  'Explore the calendar — W marks are earned one day at a time.',
+  'Tap tasks to check them off, then log your day.',
+  'This is what your results look like. Ready to build yours?',
+];
+
+function wMark(sz,col){
+  const p=[[sz*.18,sz*.2],[sz*.36,sz*.78],[sz*.5,sz*.36],[sz*.64,sz*.78],[sz*.82,sz*.2]];
+  let l='';for(let i=0;i<p.length-1;i++)l+=`<line x1="${p[i][0].toFixed(1)}" y1="${p[i][1].toFixed(1)}" x2="${p[i+1][0].toFixed(1)}" y2="${p[i+1][1].toFixed(1)}" stroke="${col}" stroke-width="${(sz*.13).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}" fill="none" style="width:${sz}px;height:${sz}px">${l}</svg>`;
+}
+
+// ── Splash calendar ──
+const splashStates=['d','d','d','p','d','m','d','d','p','d','d','d','d','d','m','d','d','d','p','d'];
+const s1c=document.getElementById('s1cal');
+splashStates.forEach(s=>{
+  const d=document.createElement('div');d.className='s1c '+s;
+  if(s==='d') d.innerHTML=wMark(32,'white');
+  s1c.appendChild(d);
+});
+
+// ── Calendar screen ──
+const today=new Date();today.setHours(0,0,0,0);
+const startDate=new Date(today);startDate.setDate(today.getDate()-13);
+const viewMonth=today.getMonth();const viewYear=today.getFullYear();
+document.getElementById('cal-month-lbl').textContent=today.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+const firstDow=new Date(viewYear,viewMonth,1).getDay();
+const dayStates={};
+for(let d=1;d<=14;d++){
+  if([4,9].includes(d)) dayStates[d]='missed2';
+  else if([3,7,11].includes(d)) dayStates[d]='partial2';
+  else dayStates[d]='done2';
+}
+dayStates[14]='today2';
+const dateToChallDay={};
+for(let d=1;d<=30;d++){
+  const dt=new Date(startDate);dt.setDate(startDate.getDate()+(d-1));
+  dateToChallDay[dt.toDateString()]=d;
+}
+const cg=document.getElementById('cal-grid2');
+for(let i=0;i<firstDow;i++){const e=document.createElement('div');e.className='cd empty';cg.appendChild(e);}
+for(let date=1;date<=daysInMonth;date++){
+  const dt=new Date(viewYear,viewMonth,date);
+  const challDay=dateToChallDay[dt.toDateString()];
+  const cell=document.createElement('div');
+  if(!challDay){
+    cell.className='cd out2';cell.innerHTML=`<span class="cdn2">${date}</span>`;
+  } else {
+    const st=dayStates[challDay]||(dt>today?'future2':'missed2');
+    cell.className='cd '+st;
+    if(st==='done2') cell.innerHTML=`<span class="cdn2">${date}</span><div class="wm2">${wMark(14,'white')}</div>`;
+    else cell.innerHTML=`<span class="cdn2">${date}</span>`;
+  }
+  cg.appendChild(cell);
+}
+
+// ── Element grid ──
+const ELEMENTS_PREVIEW=[
+  {id:'physical',name:'Physical',icon:'🏃',bg:'#D8F3DC',tasks:[
+    {name:'Workout',sub:'Cardio, strength, or sport',unit:'min',def:'45'},
+    {name:'Walk steps',sub:'Daily step goal',unit:'steps',def:'10000'},
+    {name:'Drink water',sub:'Daily hydration',unit:'oz',def:'64'},
+    {name:'Sleep',sub:'Quality sleep goal',unit:'hrs',def:'8'},
+  ]},
+  {id:'emotional',name:'Emotional',icon:'💛',bg:'#FCE4EC',tasks:[
+    {name:'Journal entry',sub:'Reflect or free write',unit:null},
+    {name:'Mood log',sub:'Rate and note your day',unit:null},
+    {name:'Screen-free time',sub:'No screens before bed',unit:'min',def:'30'},
+  ]},
+  {id:'social',name:'Social',icon:'🤝',bg:'#E3F2FD',tasks:[
+    {name:'Connect with someone',sub:'Call, text, or meet',unit:null},
+    {name:'Act of kindness',sub:'Do something for someone',unit:null},
+  ]},
+  {id:'intellectual',name:'Intellectual',icon:'📚',bg:'#EDE7F6',tasks:[
+    {name:'Read',sub:'Non-fiction or books',unit:'min',def:'30'},
+    {name:'Learn something new',sub:'Course, podcast, or video',unit:'min',def:'20'},
+  ]},
+  {id:'spiritual',name:'Spiritual',icon:'🧘',bg:'#FFF8E1',tasks:[
+    {name:'Meditate',sub:'Mindfulness or breath work',unit:'min',def:'10'},
+    {name:'Gratitude practice',sub:'List 3 things grateful for',unit:null},
+    {name:'Time in nature',sub:'Walk or sit outside',unit:'min',def:'20'},
+  ]},
+  {id:'environmental',name:'Environ.',icon:'🌿',bg:'#E8F5E9',tasks:[
+    {name:'Clean eating',sub:'Whole foods, minimal processed',unit:null},
+    {name:'Time outside',sub:'Fresh air and daylight',unit:'min',def:'30'},
+  ]},
+  {id:'occupational',name:'Occupat.',icon:'💼',bg:'#FFF3E0',tasks:[
+    {name:'Deep work session',sub:'Focused, distraction-free',unit:'min',def:'90'},
+    {name:'Set daily intentions',sub:'Write your top 3 priorities',unit:null},
+  ]},
+  {id:'financial',name:'Financial',icon:'💰',bg:'#E0F7FA',tasks:[
+    {name:'Track spending',sub:'Log every purchase',unit:null},
+    {name:'Save toward goal',sub:'Transfer to savings',unit:'$',def:'10'},
+  ]},
+];
+
+let prevStagedTasks={};
+let prevMasterTasks=[];
+let prevActiveEl=null;
+
+const elGrid=document.getElementById('el-grid');
+function buildPrevElGrid(){
+  elGrid.innerHTML='';
+  document.getElementById('el-count').textContent=`(${[...new Set(prevMasterTasks.map(t=>t.elId))].length} selected)`;
+  ELEMENTS_PREVIEW.forEach(el=>{
+    const hasTasks=prevMasterTasks.some(t=>t.elId===el.id);
+    const isActive=prevActiveEl===el.id;
+    const d=document.createElement('div');
+    d.className='el-btn'+(isActive?' on':hasTasks?' full':'');
+    d.innerHTML=`<span class="el-icon">${el.icon}</span><span class="el-name">${el.name}</span>`;
+    d.onclick=()=>{
+      prevActiveEl=prevActiveEl===el.id?null:el.id;
+      if(prevActiveEl&&!prevStagedTasks[prevActiveEl]) prevStagedTasks[prevActiveEl]={};
+      buildPrevElGrid();buildPrevTaskPicker();
+    };
+    elGrid.appendChild(d);
+  });
+}
+
+function buildPrevTaskPicker(){
+  const wrap=document.getElementById('preview-task-picker');
+  if(!prevActiveEl){wrap.style.display='none';buildPrevTaskList();return;}
+  const el=ELEMENTS_PREVIEW.find(e=>e.id===prevActiveEl);
+  const staged=prevStagedTasks[prevActiveEl]||{};
+  const stagedCount=Object.keys(staged).length;
+  wrap.style.display='block';
+  wrap.innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)">
+        <div style="width:32px;height:32px;border-radius:9px;background:${el.bg};display:flex;align-items:center;justify-content:center;font-size:16px">${el.icon}</div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--t)">${el.name} wellness</div><div style="font-size:11px;color:var(--t2)">Select tasks, set duration, then add</div></div>
+      </div>
+      ${el.tasks.map((t,i)=>{
+        const inMaster=prevMasterTasks.some(m=>m.elId===el.id&&m.name===t.name);
+        const isStaged=!!staged[t.name];
+        const val=isStaged?staged[t.name].value:(t.def||'');
+        return `<div onclick="prevStageTask('${el.id}','${t.name}',${i})"
+          style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;background:${isStaged?'var(--brp)':inMaster?'#f7faf8':'white'};transition:background .15s">
+          <div style="width:20px;height:20px;border-radius:50%;border:2px solid ${isStaged?'var(--br)':inMaster?'var(--brl)':'var(--border2)'};background:${isStaged?'var(--br)':'transparent'};flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px">
+            ${isStaged?`<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7.5 8,2.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}
+          </div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500;color:var(--t)">${t.name}${inMaster?` <span style="font-size:10px;color:var(--brl)">✓ added</span>`:''}</div>
+            <div style="font-size:11px;color:var(--t2)">${t.sub}</div>
+            ${t.unit&&isStaged?`<div style="display:flex;align-items:center;gap:6px;margin-top:7px">
+              <input type="number" value="${val}" onclick="event.stopPropagation()"
+                oninput="if(prevStagedTasks['${el.id}']&&prevStagedTasks['${el.id}']['${t.name}']) prevStagedTasks['${el.id}']['${t.name}'].value=this.value"
+                style="width:64px;padding:5px 8px;border-radius:7px;border:1.5px solid var(--border2);font-size:12px;text-align:center;font-family:var(--fb)"/>
+              <span style="font-size:12px;color:var(--t2)">${t.unit}</span>
+            </div>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+      <div style="padding:10px 14px">
+        <button onclick="prevAddStaged('${el.id}')"
+          style="width:100%;padding:10px;border:none;border-radius:9px;font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;
+          background:${stagedCount>0?'var(--br)':'var(--border)'};
+          color:${stagedCount>0?'white':'var(--t3)'};
+          pointer-events:${stagedCount>0?'auto':'none'}">
+          ${stagedCount>0?`+ Add ${stagedCount} task${stagedCount>1?'s':''} to challenge`:'Select tasks above to add'}
+        </button>
+      </div>
+    </div>`;
+  buildPrevTaskList();
+}
+
+function prevStageTask(elId,name,idx){
+  if(!prevStagedTasks[elId]) prevStagedTasks[elId]={};
+  const inMaster=prevMasterTasks.some(m=>m.elId===elId&&m.name===name);
+  if(inMaster){prevMasterTasks=prevMasterTasks.filter(m=>!(m.elId===elId&&m.name===name));buildPrevElGrid();buildPrevTaskPicker();return;}
+  const el=ELEMENTS_PREVIEW.find(e=>e.id===elId);
+  const t=el.tasks[idx];
+  if(prevStagedTasks[elId][name]) delete prevStagedTasks[elId][name];
+  else prevStagedTasks[elId][name]={value:t.def||'',unit:t.unit};
+  buildPrevTaskPicker();
+}
+
+function prevAddStaged(elId){
+  const el=ELEMENTS_PREVIEW.find(e=>e.id===elId);
+  Object.entries(prevStagedTasks[elId]||{}).forEach(([name,data])=>{
+    if(!prevMasterTasks.some(m=>m.elId===elId&&m.name===name))
+      prevMasterTasks.push({elId,name,icon:el.icon,elName:el.name,unit:data.unit,value:data.value});
+  });
+  prevStagedTasks[elId]={};prevActiveEl=null;
+  buildPrevElGrid();buildPrevTaskPicker();buildPrevTaskList();
+}
+
+function buildPrevTaskList(){
+  const wrap=document.getElementById('preview-task-list');
+  const rows=document.getElementById('prev-task-rows');
+  if(!wrap||!rows) return;
+  document.getElementById('prev-task-count').textContent=prevMasterTasks.length;
+  if(prevMasterTasks.length===0){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  rows.innerHTML=prevMasterTasks.map((t,i)=>`
+    <div style="display:flex;align-items:center;gap:9px;padding:9px 13px;border-bottom:1px solid var(--border)">
+      <span style="font-size:14px">${t.icon}</span>
+      <span style="font-size:13px;flex:1;color:var(--t)">${t.name}${t.value&&t.unit?' ('+t.value+' '+t.unit+')':''}</span>
+      <span style="font-size:10px;padding:2px 7px;border-radius:9px;background:var(--brp);color:var(--brd)">${t.elName}</span>
+      <div onclick="prevMasterTasks.splice(${i},1);buildPrevElGrid();buildPrevTaskPicker();buildPrevTaskList()"
+        style="width:18px;height:18px;border-radius:50%;background:var(--bg);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:var(--t2)">×</div>
+    </div>`).join('');
+}
+
+buildPrevElGrid();
+
+// ── Check-in screen ──
+const TASKS=[
+  {name:'Workout · 45 min',el:'Physical',done:true},
+  {name:'Read · 30 min',el:'Intellectual',done:true},
+  {name:'Journal entry',el:'Emotional',done:false},
+  {name:'Meditate · 10 min',el:'Spiritual',done:false},
+  {name:'Time in nature · 20 min',el:'Spiritual',done:false},
+];
+function renderTasks(){
+  const list=document.getElementById('ci-tasks2');list.innerHTML='';
+  const done=TASKS.filter(t=>t.done).length;
+  const total=TASKS.length;
+  const pct=done/total;
+  const grade=pct===1?'A':pct>=.8?'B+':pct>=.6?'B':pct>=.4?'C':'D';
+  const gc=pct>=.8?'var(--br)':pct>=.6?'#2E7D32':'var(--ac)';
+  document.getElementById('ci-grade-lbl').innerHTML=`${done}/${total} &nbsp;<strong style="color:${gc}">${grade}</strong>`;
+  // Update results screen live
+  const pctRound=Math.round(pct*100);
+  document.getElementById('res-grade-lbl').textContent=grade;
+  document.getElementById('res-pct-lbl').textContent=pctRound+'% overall completion';
+  document.getElementById('res-bar2').style.width=pctRound+'%';
+
+  TASKS.forEach((t,i)=>{
+    const row=document.createElement('div');
+    row.className='trow'+(t.done?' ck2':'');
+    row.innerHTML=`<div class="tcheck">${t.done?`<svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="width:11px;height:11px"><polyline points="2,5.5 4.5,8 9,3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`:''}</div><span class="tlabel">${t.name}</span><span class="ttag">${t.el}</span>`;
+    row.onclick=()=>{t.done=!t.done;renderTasks();};
+    list.appendChild(row);
+  });
+}
+renderTasks();
+
+const today2=new Date();
+document.getElementById('ci-date-lbl').textContent='Today — '+today2.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+function logActivity(){
+  const done=TASKS.filter(t=>t.done).length;
+  if(done===0){alert('Tap a task to mark it complete first.');return;}
+  const btn=document.querySelector('.log-act-btn');
+  btn.textContent='Saved ✓';btn.style.background='var(--brp)';btn.style.color='var(--brd)';
+  setTimeout(()=>{btn.textContent='Log activity';btn.style.background='';btn.style.color='';},2000);
+}
+function logDayPreview(){
+  const btn=document.getElementById('log-day-btn2');
+  const done=TASKS.filter(t=>t.done).length;
+  btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="width:14px;height:14px"><polyline points="2,7 5.5,11 12,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Day logged ✓`;
+  btn.classList.add('done');
+  document.querySelector('.log-act-btn').style.display='none';
+  setTimeout(()=>move(1),900);
+}
+
+// ── Heat map ──
+const hmData=[
+  {icon:'🏃',name:'Physical',pct:88,bg:'#1B4332',tc:'#F4A261'},
+  {icon:'📚',name:'Intellectual',pct:75,bg:'#2D6A4F',tc:'#F4A261'},
+  {icon:'💛',name:'Emotional',pct:60,bg:'#52B788',tc:'white'},
+  {icon:'🧘',name:'Spiritual',pct:50,bg:'#D8F3DC',tc:'#2D6A4F'},
+];
+const hmg=document.getElementById('hm-grid2');
+hmData.forEach(h=>{
+  const d=document.createElement('div');d.className='hm-cell2';
+  d.style.background=h.bg;
+  d.innerHTML=`<span class="hm-icon2">${h.icon}</span><div class="hm-name2" style="color:${h.tc};opacity:.7">${h.name.substring(0,5)}</div><div class="hm-val2" style="color:${h.tc}">${h.pct}%</div>`;
+  hmg.appendChild(d);
+});
+
+// ── Dots ──
+const dotsEl=document.getElementById('tour-dots');
+for(let i=0;i<SCREENS;i++){
+  const d=document.createElement('div');d.className='tdot'+(i===0?' on':'');dotsEl.appendChild(d);
+}
+
+// Ob dots
+const obDots=document.getElementById('ob-dots2');
+for(let i=0;i<5;i++){
+  const d=document.createElement('div');
+  d.style.cssText=`width:${i===1?'18px':'6px'};height:6px;border-radius:3px;background:${i===1?'var(--br)':'var(--border2)'};transition:all .3s`;
+  obDots.appendChild(d);
+}
+
+function go(n){
+  cur=Math.max(0,Math.min(SCREENS-1,n));
+  document.querySelectorAll('.tscreen').forEach((s,i)=>{
+    s.classList.toggle('active',i===cur);
+  });
+  document.querySelectorAll('.tdot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  document.getElementById('cta-hint').textContent=CTAHINTS[cur];
+  const nextBtn=document.querySelector('.cta-btn.ghost');
+  nextBtn.textContent=cur===SCREENS-1?'Start from the beginning ↺':'Next screen →';
+  document.getElementById('swipe-hint').style.display=cur===0?'block':'none';
+}
+function move(dir){
+  if(cur===SCREENS-1&&dir===1) go(0);
+  else go(cur+dir);
+}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')move(1);if(e.key==='ArrowLeft')move(-1);});
+let tx=0;
+document.getElementById('phone').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.getElementById('phone').addEventListener('touchend',e=>{const d=tx-e.changedTouches[0].clientX;if(Math.abs(d)>40)move(d>0?1:-1);},{passive:true});
+
+// Dur select
+function selDur(el){document.querySelectorAll('.dur-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+</script>
+</body>
+</html>
