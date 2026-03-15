@@ -232,12 +232,13 @@ body{font-family:var(--font-body);color:var(--t)}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .cd{aspect-ratio:1;border-radius:9px;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;user-select:none;transition:transform .1s,opacity .1s}
 .cd:active{transform:scale(.88)}
-.cd.empty,.cd.future{pointer-events:none}
+.cd.empty,.cd.outside{pointer-events:none}
 .cd.done{background:var(--br)}
 .cd.partial{background:var(--brp);border:1.5px solid var(--brl)}
 .cd.missed{background:#f5f5f2;border:1px solid var(--border)}
 .cd.today{background:var(--card);border:2.5px solid var(--br)}
-.cd.future{background:transparent;border:1px solid var(--border);opacity:.3}
+.cd.future{background:var(--brp);border:1px solid var(--brl);opacity:.5}
+.cd.outside{background:transparent;opacity:.22}
 .cd.editable{box-shadow:0 0 0 2.5px var(--ac)}
 .cdn{font-size:10px;font-weight:500;color:var(--t3)}
 .cd.done .cdn{color:rgba(255,255,255,.45);position:absolute;top:2px;left:0;right:0;text-align:center;font-size:8px}
@@ -269,6 +270,9 @@ body{font-family:var(--font-body);color:var(--t)}
 .log-btn{padding:9px 20px;background:var(--br);color:#fff;border:none;border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
 .log-btn:active{background:var(--brd)}
 .log-btn.done-btn{background:var(--brl)}
+.log-activity-btn{padding:9px 20px;background:var(--bg);color:var(--br);border:2px solid var(--br);border-radius:10px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.log-activity-btn:active{background:var(--brp)}
+.log-activity-btn.saved{background:var(--brp);border-color:var(--brl);color:var(--brd)}
 .notif-strip{margin:10px 16px 0;background:var(--acl);border-radius:10px;padding:9px 13px;display:flex;align-items:flex-start;gap:7px;font-size:12px;color:var(--acd);line-height:1.5}
 .share-row{margin:12px 16px 0;display:flex;gap:8px}
 .share-btn{flex:1;background:var(--br);color:#fff;border:none;border-radius:var(--r-sm);padding:12px;font-family:var(--font-body);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
@@ -552,7 +556,7 @@ body{font-family:var(--font-body);color:var(--t)}
       <div id="ci-tasks"></div>
       <div class="ci-footer">
         <span class="ci-lock" id="ci-lock">Locks at midnight</span>
-        <button class="log-btn" id="log-btn" onclick="logDay()">Log today ✓</button>
+        <button class="log-activity-btn" id="log-activity-btn" onclick="logActivity()">Log activity</button>
       </div>
     </div>
 
@@ -562,12 +566,12 @@ body{font-family:var(--font-body);color:var(--t)}
     </div>
 
     <div class="share-row">
-      <button class="share-btn" onclick="openShare()">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><path d="M9 2L13 6L9 10" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 6H5C3.3 6 2 7.1 2 9V13" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Share my progress
+      <button class="share-btn" id="log-day-btn" onclick="logDay()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><polyline points="2,8 6,12 13,3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Log Day
       </button>
       <button class="share-copy" onclick="openShare()">
-        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><rect x="1" y="4" width="8" height="9.5" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 3V2.5A1 1 0 015 1.5H12A1 1 0 0113 2.5V10A1 1 0 0112 11H11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="width:15px;height:15px"><path d="M9 2L13 6L9 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 6H5C3.3 6 2 7.1 2 9V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </div>
   </div>
@@ -743,7 +747,9 @@ function buildSplashCal(){
 function demoMode(){
   S.name='Alex'; S.color='#2D6A4F';
   S.challengeDays=30; S.currentDay=14; S.streak=14;
-  S.startDate=new Date();
+  // Anchor start 13 days ago so day 14 = today's real date
+  const d=new Date(); d.setDate(d.getDate()-13); d.setHours(0,0,0,0);
+  S.startDate=d;
   S.selectedTasks=[
     {elId:'physical',name:'Workout 45 min',icon:'🏃',elName:'Physical',unit:'min',value:'45'},
     {elId:'physical',name:'Drink 64oz water',icon:'🏃',elName:'Physical',unit:'oz',value:'64'},
@@ -1000,6 +1006,7 @@ function startChallenge(){
   document.getElementById('tabnav').style.display='flex';
   go('s-cal');
   buildCal(); buildCheckin(); updProgressBand();
+  saveState();
 }
 
 // ── CALENDAR ─────────────────────────────────────────────────────────────────
@@ -1013,36 +1020,83 @@ function wMarkSvg(sz, col){
 function buildCal(){
   const grid=document.getElementById('cal-grid');
   grid.innerHTML='';
-  const today=S.currentDay;
-  const total=S.challengeDays;
+
+  // Anchor: challenge day 1 = the real calendar date when challenge started
+  const start=new Date(S.startDate);
+  start.setHours(0,0,0,0);
+  const realToday=new Date(); realToday.setHours(0,0,0,0);
   const editWin=3;
-  for(let d=1;d<=total;d++){
-    const cell=document.createElement('div');
-    const st=S.dayStates[d]||'future';
-    const editable=d<today&&d>=today-editWin&&st!=='done';
-    cell.className='cd '+st+(editable?' editable':'');
-    if(st==='done'){
-      cell.innerHTML=`<span class="cdn">${d}</span><div class="wm">${wMarkSvg(18,'white')}</div>`;
-    } else {
-      cell.innerHTML=`<span class="cdn">${d}</span>`;
-    }
-    if(editable) cell.onclick=()=>openEditModal(d);
-    grid.appendChild(cell);
+
+  // Figure out which month to display — show the month containing today
+  const viewYear=realToday.getFullYear();
+  const viewMonth=realToday.getMonth();
+  document.getElementById('cal-month').textContent=
+    realToday.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+  // How many days in display month, and what day-of-week does it start on
+  const daysInMonth=new Date(viewYear,viewMonth+1,0).getDate();
+  const firstDow=new Date(viewYear,viewMonth,1).getDay(); // 0=Sun
+
+  // Build a map: real date string → challenge day number
+  const dateToChallDay={};
+  for(let d=1;d<=S.challengeDays;d++){
+    const dt=new Date(start);
+    dt.setDate(start.getDate()+(d-1));
+    const key=dt.toDateString();
+    dateToChallDay[key]=d;
   }
-  // filler cells for grid alignment
-  const remaining=total%7===0?0:7-(total%7);
-  for(let i=0;i<remaining;i++){
+
+  // Leading empty cells for day-of-week alignment
+  for(let i=0;i<firstDow;i++){
     const e=document.createElement('div');e.className='cd empty';grid.appendChild(e);
   }
-  // show/hide edit banner
+
+  // Render each calendar date
+  for(let date=1;date<=daysInMonth;date++){
+    const thisDate=new Date(viewYear,viewMonth,date);
+    const challDay=dateToChallDay[thisDate.toDateString()];
+    const isToday=thisDate.toDateString()===realToday.toDateString();
+    const isInChallenge=!!challDay;
+    const isPast=thisDate<realToday;
+    const isFuture=thisDate>realToday;
+
+    const cell=document.createElement('div');
+
+    if(!isInChallenge){
+      // Outside challenge window — show date number, muted
+      cell.className='cd outside';
+      cell.innerHTML=`<span class="cdn">${date}</span>`;
+    } else {
+      const st=S.dayStates[challDay]||(isToday?'today':isFuture?'future':'missed');
+      const editable=isPast&&challDay<S.currentDay&&challDay>=S.currentDay-editWin&&st!=='done';
+      cell.className='cd '+st+(editable?' editable':'');
+      if(st==='done'){
+        cell.innerHTML=`<span class="cdn">${date}</span><div class="wm">${wMarkSvg(18,'white')}</div>`;
+      } else {
+        cell.innerHTML=`<span class="cdn">${date}</span>`;
+      }
+      if(editable) cell.onclick=(()=>{const cd=challDay;return()=>openEditModal(cd);})();
+    }
+    grid.appendChild(cell);
+  }
+
+  // Trailing empty cells to complete last row
+  const totalCells=firstDow+daysInMonth;
+  const trail=totalCells%7===0?0:7-(totalCells%7);
+  for(let i=0;i<trail;i++){
+    const e=document.createElement('div');e.className='cd empty';grid.appendChild(e);
+  }
+
+  // Edit banner
   const editableDays=[];
-  for(let d=today-editWin;d<today;d++){
+  for(let d=S.currentDay-editWin;d<S.currentDay;d++){
     if(d>0&&S.dayStates[d]!=='done') editableDays.push(d);
   }
   const banner=document.getElementById('edit-banner');
   if(editableDays.length>0){
     banner.style.display='flex';
-    document.getElementById('edit-banner-text').textContent=`Day${editableDays.length>1?'s':''} ${editableDays.join(', ')} still editable — tap to update`;
+    document.getElementById('edit-banner-text').textContent=
+      `Day${editableDays.length>1?'s':''} ${editableDays.join(', ')} still editable — tap to update`;
   } else {
     banner.style.display='none';
   }
@@ -1063,7 +1117,7 @@ function renderCheckin(){
     const row=document.createElement('div');
     row.className='task-row'+(t.done?' ck':'');
     row.innerHTML=`<div class="tr-check">${t.done?checkSvg():''}</div><span class="tr-label">${t.name}${t.value&&t.unit?' · '+t.value+' '+t.unit:''}</span><span class="tr-tag">${t.elName}</span>`;
-    row.onclick=()=>{t.done=!t.done;renderCheckin();};
+    row.onclick=()=>{t.done=!t.done;renderCheckin();saveState();};
     list.appendChild(row);
   });
   const done=(S.todayTasks||[]).filter(t=>t.done).length;
@@ -1077,6 +1131,24 @@ function renderCheckin(){
   document.getElementById('ci-title').textContent=`Today — ${today.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
 }
 
+// ── LOG ACTIVITY (incremental, keeps day open) ──────────────────────────────
+function logActivity(){
+  const done=(S.todayTasks||[]).filter(t=>t.done).length;
+  const total=(S.todayTasks||[]).length;
+  if(done===0){showToast('Tap a task to mark it complete first.');return;}
+  // Save progress without locking the day
+  S.dayStates[S.currentDay]='partial';
+  saveState();
+  buildCal();
+  updProgressBand();
+  const btn=document.getElementById('log-activity-btn');
+  btn.textContent='Saved ✓';
+  btn.classList.add('saved');
+  setTimeout(()=>{btn.textContent='Log activity';btn.classList.remove('saved');},2000);
+  showToast(`${done}/${total} activities saved — day still open.`);
+}
+
+// ── LOG DAY (final, locks the day) ──────────────────────────────────────────
 function logDay(){
   const done=(S.todayTasks||[]).filter(t=>t.done).length;
   const total=(S.todayTasks||[]).length;
@@ -1084,15 +1156,18 @@ function logDay(){
   S.dayStates[S.currentDay]=done===total?'done':done>0?'partial':'missed';
   S.dayLogged=true;
   if(done>0) S.streak++;
+  saveState();
   buildCal();
-  const btn=document.getElementById('log-btn');
+  const btn=document.getElementById('log-day-btn');
   btn.textContent='Day logged ✓';
-  btn.classList.add('done-btn');
+  btn.style.opacity='.6';
+  btn.style.pointerEvents='none';
+  document.getElementById('log-activity-btn').style.display='none';
   document.getElementById('ci-lock').textContent=done+'/'+total+' tasks · locked';
   document.getElementById('notif-strip').style.display='none';
   updateStreakPill();
   updProgressBand();
-  showToast(done===total?'Perfect day. W mark earned! 🏆':`${done}/${total} tasks — ${done===total?'A':done/total>=.8?'B+':done/total>=.6?'B':'C'} grade logged.`);
+  showToast(done===total?'Perfect day. W mark earned! 🏆':`${done}/${total} tasks — ${done/total>=.8?'B+':done/total>=.6?'B':'C'} grade logged.`);
 }
 
 function updProgressBand(){
@@ -1207,9 +1282,79 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
+// ── LOCALSTORAGE PERSISTENCE ─────────────────────────────────────────────────
+function saveState(){
+  try{
+    const save={
+      name:S.name, color:S.color, goals:S.goals,
+      challengeDays:S.challengeDays,
+      selectedTasks:S.selectedTasks,
+      dayStates:S.dayStates,
+      startDate:S.startDate?S.startDate.toISOString():null,
+      currentDay:S.currentDay,
+      streak:S.streak,
+      dayLogged:S.dayLogged,
+      lastSaveDate: new Date().toISOString(),
+    };
+    localStorage.setItem('wholify_state',JSON.stringify(save));
+  } catch(e){}
+}
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem('wholify_state');
+    if(!raw) return false;
+    const save=JSON.parse(raw);
+    S.name=save.name||'';
+    S.color=save.color||'#2D6A4F';
+    S.goals=save.goals||[];
+    S.challengeDays=save.challengeDays||30;
+    S.selectedTasks=save.selectedTasks||[];
+    S.dayStates=save.dayStates||{};
+    S.startDate=save.startDate?new Date(save.startDate):null;
+    S.streak=save.streak||0;
+    S.dayLogged=save.dayLogged||false;
+    S.todayTasks=save.todayTasks||[];
+
+    // Recalculate currentDay from startDate and today's real date
+    if(S.startDate){
+      const start=new Date(S.startDate); start.setHours(0,0,0,0);
+      const today=new Date(); today.setHours(0,0,0,0);
+      const diff=Math.floor((today-start)/(1000*60*60*24))+1;
+      S.currentDay=Math.max(1,Math.min(diff,S.challengeDays));
+
+      // If we've crossed into a new day since last session, reset dayLogged
+      const lastSaveDate=save.lastSaveDate?new Date(save.lastSaveDate):null;
+      if(lastSaveDate){
+        const lastDay=new Date(lastSaveDate); lastDay.setHours(0,0,0,0);
+        if(today.toDateString()!==lastDay.toDateString()){
+          S.dayLogged=false;
+          S.todayTasks=(S.selectedTasks||[]).map(t=>({...t,done:false}));
+        }
+      }
+    }
+    return S.startDate&&S.selectedTasks.length>0;
+  } catch(e){ return false; }
+}
+
 // ── INIT ─────────────────────────────────────────────────────────────────────
 buildSplashCal();
 document.getElementById('tabnav').style.display='none';
+
+// Try to restore saved session
+if(loadState()){
+  updateCalAv(); updateStreakPill();
+  document.getElementById('tabnav').style.display='flex';
+  go('s-cal');
+  buildCal(); buildCheckin(); updProgressBand();
+  // Restore day locked state if already logged today
+  if(S.dayLogged){
+    const logDayBtn=document.getElementById('log-day-btn');
+    if(logDayBtn){logDayBtn.textContent='Day logged ✓';logDayBtn.style.opacity='.6';logDayBtn.style.pointerEvents='none';}
+    const actBtn=document.getElementById('log-activity-btn');
+    if(actBtn) actBtn.style.display='none';
+  }
+}
 </script>
 </body>
 </html>
