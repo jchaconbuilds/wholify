@@ -871,6 +871,12 @@ document.getElementById('phone').addEventListener('touchend',e=>{const d=tx-e.ch
 
 // Dur select
 function selDur(el){document.querySelectorAll('.dur-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+
+// ── Init screen 4 tasks ──
+renderTasks4();
+const today4=new Date();
+const lbl4=document.getElementById('ci-date-lbl4');
+if(lbl4) lbl4.textContent='Today — '+today4.toLocaleDateString('en-US',{month:'short',day:'numeric'});
 </script>
 </body>
 </html>
